@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Button } from "@/components/ui/button";
+import { LogOutButton } from "@/components/logout-button";
 
 export default function AppLayout({
   children,
@@ -10,12 +12,12 @@ export default function AppLayout({
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="text-2xl font-bold">SplitStream App</Link>
+          <Link href="/" className="text-2xl font-bold">SplitStream App</Link>
           <nav className="flex items-center space-x-4">
             <Link href="/dashboard" className="hover:underline">Dashboard</Link>
             <Link href="/expenses" className="hover:underline">Expenses</Link>
             <Link href="/groups" className="hover:underline">Groups</Link>
-            <Link href="/" className="hover:underline">Logout</Link>
+            <LogOutButton />
             <ModeToggle />
           </nav>
         </div>
