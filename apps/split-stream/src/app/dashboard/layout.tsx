@@ -1,6 +1,5 @@
-import { ThemeProvider } from "@/components/providers/theme";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import Link from "next/link";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function AppLayout({
   children,

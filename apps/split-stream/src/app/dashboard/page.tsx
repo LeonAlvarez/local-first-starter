@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,8 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, PieChart, Users, Wallet } from "lucide-react";
-import Link from "next/link";
+import { Users } from "lucide-react";
 
 export default function Dashboard() {
   return (
