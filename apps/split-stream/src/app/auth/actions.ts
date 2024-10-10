@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { authenticateUser } from '@/lib/auth'
+import { authenticateUser } from 'core/auth'
 
 export async function logout(redirectTo: string = '') {
   cookies().delete('authToken')
@@ -12,10 +12,11 @@ export async function logout(redirectTo: string = '') {
 }
 
 export async function login(email: string, password: string) {
-  const user = authenticateUser(email, password)
+  const user = await authenticateUser(email, password)
+
   if (user) {
     cookies().set('authToken', user.id.toString(), { path: '/' })
-    redirect('/dashboard')
+    redirect('/dashboard');
   }
 
   return {

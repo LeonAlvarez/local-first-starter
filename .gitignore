@@ -39,3 +39,7 @@ next-env.d.ts
 
 # Docker
 postgres_data/
+
+references.md
+features.md
+stuff.md
