@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +28,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen bg-background text-foreground">
+            <header className="border-b">
+              <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 className="text-2xl font-bold">SplitStream</h1>
+                <div className="flex items-center space-x-4">
+                  <ModeToggle />
+                </div>
+              </div>
+            </header>
+            <main className="container mx-auto px-4 py-16 md:py-24">
+              {children}
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
