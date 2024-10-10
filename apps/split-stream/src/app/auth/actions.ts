@@ -6,7 +6,9 @@ import { authenticateUser } from '@/lib/auth'
 
 export async function logout(redirectTo: string = '') {
   cookies().delete('authToken')
-  redirectTo && redirect(redirectTo)
+  if (redirectTo) {
+    redirect(redirectTo)
+  }
 }
 
 export async function login(email: string, password: string) {

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Button } from "@/components/ui/button";
 import { LogOutButton } from "@/components/logout-button";
 
 export default function AppLayout({
