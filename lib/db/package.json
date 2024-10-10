@@ -1,0 +1,32 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:generate": "dotenv -e ../../.env -- drizzle-kit generate",
+    "db:seed": "dotenv -e ../../.env -- pnpx tsx seeder.ts",
+    "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "@types/node": "^20.16.11",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.25.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.34.1",
+    "drizzle-zod": "^0.5.1",
+    "pg": "^8.13.0",
+    "zod": "^3.23.8"
+  }
+}
