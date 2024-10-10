@@ -1,25 +1,49 @@
-'use server'
+"use server";
 
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { authenticateUser } from 'core/auth'
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import {
+  authenticateUser,
+  getSignedSessionToken,
+  getExpireAt,
+} from "core/auth";
 
-export async function logout(redirectTo: string = '') {
-  cookies().delete('authToken')
+export async function logout(redirectTo: string = "") {
+  cookies().delete("authToken");
   if (redirectTo) {
-    redirect(redirectTo)
+    redirect(redirectTo);
   }
 }
 
 export async function login(email: string, password: string) {
-  const user = await authenticateUser(email, password)
+  const user = await authenticateUser(email, password);
 
   if (user) {
-    cookies().set('authToken', user.id.toString(), { path: '/' })
-    redirect('/dashboard');
+    const expiresAt = getExpireAt()
+
+    const sessionData = {
+      user: {
+        id: user.id,
+      },
+      expiresAt: expiresAt.toISOString(),
+    };
+
+    const encryptedSession = await getSignedSessionToken(
+      sessionData,
+      expiresAt
+    );
+
+    cookies().set("session", encryptedSession, {
+      expires: expiresAt,
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+
+    redirect("/dashboard");
   }
 
   return {
-    error: 'Invalid email or password'
-  }
+    error: "Invalid email or password",
+  };
 }

@@ -1,10 +1,10 @@
 import "dotenv/config";
-import { base, faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 import db from "./index";
 import schema from "./schema";
-import { InsertUserGroup, TeamRole } from "./schemas/users_groups";
-import { InsertUser } from "./schemas/users";
-import { InsertGroup } from "./schemas/group";
+import { type InsertUserGroup, TeamRole } from "./schemas/users_groups";
+import type { InsertUser } from "./schemas/users";
+import type { InsertGroup } from "./schemas/group";
 import { hashPassword } from "core/auth";
 
 const baseUsers = [
@@ -36,7 +36,7 @@ async function seedDatabase() {
   console.log("Starting database seeding...");
   // Create users
 
-  console.log(`Creating ${numberOfUsers + baseUsers.length} base users...`);
+  console.log(`Creating ${numberOfUsers + baseUsers.length} users...`);
   let userIds = await Promise.all(
     baseUsers.map(async ({ email, password }) => createUser(email, password))
   );
