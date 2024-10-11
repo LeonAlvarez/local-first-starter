@@ -28,7 +28,7 @@ export async function GET(
       console.error('Error response:', resp.status, resp.statusText);
       return new Response(`Error: ${resp.status} ${resp.statusText}`, { status: resp.status });
     }
-    
+
     // Check if the response is 204 No Content
     if (resp.status === 204) {
       return new Response(null, { status: 204 });
@@ -49,9 +49,10 @@ export async function GET(
     }
 
     return resp
-  
+
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return new Response(`Internal Server Error: ${error.message}`, { status: 500 });
+    const errorMessage = error instanceof Error ? `${error.name} : ${error.message}` : error
+    console.error('Unexpected error:', errorMessage);
+    return new Response(`Internal Server Error: ${errorMessage}`, { status: 500 });
   }
 }

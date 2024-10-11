@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
       // Log error and delete invalid session
       console.error(
         "Session error:",
-        error instanceof Error ? `${error.name}: ${error.message}` : error
+        error instanceof Error ? `${error.name} : ${error.message}` : error
       );
       res.cookies.delete("session");
 
