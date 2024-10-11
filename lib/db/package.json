@@ -7,9 +7,12 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "db:export": "dotenv -e ../../apps/api/.env -- tsx ./client/export.ts",
     "db:generate": "dotenv -e ../../.env -- drizzle-kit generate",
+    "db:generate:client": "dotenv -e ../../.env --  drizzle-kit generate --config ./client.drizzle.config.ts",
     "db:seed": "dotenv -e ../../.env -- pnpx tsx seeder.ts",
-    "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate"
+    "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate",
+    "db:generate:all": "pnpm run db:generate && pnpm run db:generate:client && pnpm run db:export"
   },
   "keywords": [],
   "author": "",

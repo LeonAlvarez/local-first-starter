@@ -2,9 +2,9 @@ import "dotenv/config";
 import { faker } from "@faker-js/faker";
 import db from "./index";
 import schema from "./schema";
-import { type InsertUserGroup, TeamRole } from "./schemas/users_groups";
+import { type InsertUserGroup, TeamRole } from "./schemas/users-groups";
 import type { InsertUser } from "./schemas/users";
-import type { InsertGroup } from "./schemas/group";
+import type { InsertGroup } from "./schemas/groups";
 import { hashPassword } from "core/auth";
 
 const baseUsers = [

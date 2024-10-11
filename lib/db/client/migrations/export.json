@@ -1,0 +1,11 @@
+[
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"users\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"email\" varchar(255) NOT NULL,\n\t\"phone\" varchar(30) NOT NULL,\n\t\"user_name\" varchar(255) NOT NULL,\n\t\"first_name\" varchar(255) NOT NULL,\n\t\"last_name\" varchar(255) NOT NULL,\n\t\"bio\" text,\n\t\"password\" varchar(255) NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL,\n\tCONSTRAINT \"users_email_unique\" UNIQUE(\"email\"),\n\tCONSTRAINT \"users_phone_unique\" UNIQUE(\"phone\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"groups\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"name\" varchar(255) NOT NULL,\n\t\"description\" text,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL\n);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1728634784007,
+    "hash": "618010674c6023212df8c632a52c04ecd7d8605e8b47bfbd14cbc02793cf625d"
+  }
+]

@@ -11,9 +11,11 @@ function isProtectedRoute(request: NextRequest) {
 }
 
 export async function middleware(request: NextRequest) {
-  const sessionCookie = request.cookies.get("session");
+  const sessionCookie = request.cookies.get("session")?.value;
+  const isProtected = isProtectedRoute(request);
 
-  if (isProtectedRoute(request) && !sessionCookie) {
+  // Redirect to login if accessing protected route without session
+  if (isProtected && !sessionCookie) {
     return NextResponse.redirect(new URL(AUTH_ROUTE, request.url));
   }
 
@@ -21,9 +23,10 @@ export async function middleware(request: NextRequest) {
 
   if (sessionCookie) {
     try {
-      const parsed = await verifyToken(sessionCookie.value);
+      const parsed = await verifyToken(sessionCookie);
       const newExpiresAt = getExpireAt();
 
+      // Update session cookie
       res.cookies.set({
         name: "session",
         value: await getSignedSessionToken({
@@ -36,19 +39,19 @@ export async function middleware(request: NextRequest) {
         expires: newExpiresAt,
       });
     } catch (error) {
+      // Log error and delete invalid session
       console.error(
-        "Errror details:",
-        error instanceof Error ? error.name : "Unknown",
-        error instanceof Error ? error.message : error
+        "Session error:",
+        error instanceof Error ? `${error.name}: ${error.message}` : error
       );
-
       res.cookies.delete("session");
 
-      if (isProtectedRoute(request)) {
+      // Redirect to login if on protected route
+      if (isProtected) {
         return NextResponse.redirect(new URL(AUTH_ROUTE, request.url));
       }
     }
   }
 
-  return;
+  return res;
 }

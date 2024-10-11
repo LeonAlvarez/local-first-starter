@@ -1,6 +1,6 @@
-import { users } from "./schemas/users";
-import { groups } from "./schemas/group";
-import { userGroups } from "./schemas/users_groups";
+import { users, type User } from "./schemas/users";
+import { groups, type Group } from "./schemas/groups";
+import { userGroups, type UserGroup} from "./schemas/users-groups";
 
 export const schema = {
   users,
@@ -11,7 +11,10 @@ export const schema = {
 export {
   users,
   groups,
-  userGroups
+  userGroups,
+  UserGroup,
+  User,
+  Group
 }
 
 export default schema;

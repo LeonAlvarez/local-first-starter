@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { users } from "./users";
-import { groups } from "./group";
+import { groups } from "./groups";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 

@@ -6,7 +6,10 @@ import {
   authenticateUser,
   getSignedSessionToken,
   getExpireAt,
+  verifyToken,
 } from "core/auth";
+import db, { eq } from "db";
+import { users } from "db/schema";
 
 export async function logout(redirectTo: string = "") {
   cookies().delete("authToken");
@@ -46,4 +49,23 @@ export async function login(email: string, password: string) {
   return {
     error: "Invalid email or password",
   };
+}
+
+export async function getUser() {
+  const sessionCookie = cookies().get('session')?.value;
+  if (!sessionCookie) return null;
+
+  const sessionData = await verifyToken(sessionCookie);
+  if (!sessionData?.user?.id || typeof sessionData.user.id !== 'number') return null;
+
+  if (new Date(sessionData.expiresAt) < new Date()) return null;
+
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, sessionData.user.id))
+    .limit(1)
+    .then(results => results[0] || null);
+
+  return user;
 }
