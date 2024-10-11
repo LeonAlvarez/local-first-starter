@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { PGliteProvider } from "@electric-sql/pglite-react";
 import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { live, PGliteWithLive } from "@electric-sql/pglite/live";
-import { PGliteWorkerWithLive, runMigrations } from "@/lib/electric";
+import { PGliteWorkerWithLive } from "@/lib/electric";
 import createPgLiteClient, { PgDatabase, PgQueryResultHKT, schema } from "db/client";
 
 const dbName = "test";
@@ -47,13 +47,13 @@ export function PgLiteWorkerProvider({
     )) as PGliteWorkerWithLive;
 
     const _db = createPgLiteClient(pglite);
-    
+
     Object.defineProperty(pglite, '_db', {
       value: _db,
       writable: false,
     });
 
-    setPg(pglite as any);
+    setPg(pglite as unknown as ExtendedPGlite);
   };
 
   useEffect(() => {

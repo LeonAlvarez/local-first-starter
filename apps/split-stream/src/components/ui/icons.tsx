@@ -19,7 +19,7 @@ import {
 
 export type IconsProps = LucideProps;
 
-const SplitStream = ({ ...props }: IconsProps) => (
+const SplitStream = ({ ..._props }: IconsProps) => (
   <svg
     viewBox="149.62 124.15 260.629 102.788"
     width="260.629"
@@ -98,7 +98,7 @@ export const Icons = {
   arrowRight: ArrowRight,
   pieChart: PieChart,
   users: Users,
-  userPlus: UserPlus, 
+  userPlus: UserPlus,
   userCheck: UserCheck,
   wallet: Wallet,
   moon: MoonIcon,

@@ -42,7 +42,7 @@ export async function runMigrations(pg: PGliteInterface, dbName: string) {
     try {
       await new PgDialect().migrate(
         clientMigrations,
-        //@ts-ignore
+        //@ts-expect-error for some reason it's not typed properly
         db._.session,
         dbName
       );
@@ -64,7 +64,7 @@ export async function syncTables(
   const syncStart = performance.now();
   await Promise.all(
     TablesToSync.map(({ shape, table, primaryKey }) => {
-      //@ts-ignore
+      //@ts-expect-error need to fix this interface type
       pg.live?.syncShapeToTable({
         shape: { url: `${electricBaseUrl}/${shape || table}` },
         table,

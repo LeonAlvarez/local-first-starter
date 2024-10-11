@@ -3,7 +3,6 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { LogOutButton } from "@/components/logout-button";
 import { UserProvider } from "@/components/providers/user";
 import { getUser } from "@/app/auth/actions";
-import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { PgLiteWorkerProvider } from "@/components/providers/pglite";
 
 export default function AppLayout({
