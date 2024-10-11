@@ -25,7 +25,7 @@ export default function AppLayout({
             </nav>
           </div>
         </header>
-        <PgLiteWorkerProvider debug={1}>
+        <PgLiteWorkerProvider>
           {children}
         </PgLiteWorkerProvider>
         <footer className="border-t">

@@ -9,13 +9,14 @@ import {
 } from 'react';
 import { use } from 'react';
 import { type User } from 'db/schemas/users';
+import { redirect } from 'next/navigation';
 
 type UserContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: User;
+  setUser: (user: User) => void;
 };
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType>({} as UserContextType);
 
 export function useUser(): UserContextType {
   const context = useContext(UserContext);
@@ -34,7 +35,10 @@ export function UserProvider({
   userPromise: Promise<User | null>;
 }) {
   const initialUser = use(userPromise);
-  const [user, setUser] = useState<User | null>(initialUser);
+  if (!initialUser) {
+    redirect('/')
+  }
+  const [user, setUser] = useState<User>(initialUser);
 
   useEffect(() => {
     setUser(initialUser);
