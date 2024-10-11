@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { PGliteProvider } from "@electric-sql/pglite-react";
 import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { live, PGliteWithLive } from "@electric-sql/pglite/live";
-import createPgLiteClient, { PgDatabase, PgQueryResultHKT, schema } from "db/client";
+import createPgLiteClient, {  PgDatabase, PgQueryResultHKT, schema } from "db/client";
 import { DebugLevel } from "@electric-sql/pglite";
 
 const dbName = "test";

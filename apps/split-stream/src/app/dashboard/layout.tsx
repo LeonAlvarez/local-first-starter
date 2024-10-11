@@ -4,6 +4,8 @@ import { LogOutButton } from "@/components/logout-button";
 import { UserProvider } from "@/components/providers/user";
 import { getUser } from "@/app/auth/actions";
 import { PgLiteWorkerProvider } from "@/components/providers/pglite";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { DashboardTabs } from "@/components/dashboard/navigation";
 
 export default function AppLayout({
   children,
@@ -26,7 +28,12 @@ export default function AppLayout({
           </div>
         </header>
         <PgLiteWorkerProvider>
-          {children}
+          <ScrollArea className="h-full">
+            <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+              <DashboardTabs />
+              {children}
+            </div>
+          </ScrollArea>
         </PgLiteWorkerProvider>
         <footer className="border-t">
           <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">
