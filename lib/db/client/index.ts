@@ -1,5 +1,7 @@
 export { PgDialect } from "drizzle-orm/pg-core";
-export type { PgQueryResultHKT, PgDatabase } from "drizzle-orm/pg-core";
+import migrations from "./migrations/export.json";
+export { PgRelationalQuery } from "drizzle-orm/pg-core/query-builders/query";
+export type { PgQueryResultHKT, PgDatabase, AnyPgSelect } from "drizzle-orm/pg-core";
 import { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import { drizzle as PgLiteDrizzle } from "drizzle-orm/pglite";
 export * from "drizzle-orm";
@@ -9,7 +11,6 @@ export { type Group, type InsertGroup, insertGroupSchema, selectGroupSchema, } f
 export { type UserGroup, type InsertUserGroup, insertUserGroupSchema, selectUserGroupSchema, } from "../schemas/users-groups"
 export { schema } from "./schema"
 import schema from "./schema"
-import migrations from "./migrations/export.json";
 
 
 export type DbType = PgDatabase<PgQueryResultHKT, typeof schema>;

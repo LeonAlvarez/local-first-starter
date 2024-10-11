@@ -3,21 +3,22 @@ export const maxDuration = 60;
 
 export async function GET(
   request: Request,
-  { params }: { params: { table: string } }
+  { params }: { params: { shape: string } }
 ) {
   try {
     const url = new URL(request.url);
-    const { table } = params;
+    const { shape } = params;
 
-    const originUrl = new URL(`${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${table}`);
+    const electricUrl = new URL(`${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${shape}`);
+    console.log(electricUrl);
 
     url.searchParams.forEach((value, key) => {
       if ([`shape_id`, `offset`, 'live'].includes(key)) {
-        originUrl.searchParams.set(key, value)
+        electricUrl.searchParams.set(key, value)
       }
     });
 
-    let resp = await fetch(originUrl.toString(), {
+    let resp = await fetch(electricUrl.toString(), {
       cache: 'no-store',
       headers: {
         'Accept-Encoding': 'gzip, deflate, br',

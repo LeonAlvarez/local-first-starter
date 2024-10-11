@@ -37,6 +37,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="username"
               />
               <Input
                 type="password"
@@ -44,6 +45,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
               />
               {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>

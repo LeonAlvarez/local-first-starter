@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { PGliteProvider } from "@electric-sql/pglite-react";
 import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { live, PGliteWithLive } from "@electric-sql/pglite/live";
-import { PGliteWorkerWithLive } from "@/lib/electric";
 import createPgLiteClient, { PgDatabase, PgQueryResultHKT, schema } from "db/client";
+import { DebugLevel } from "@electric-sql/pglite";
 
 const dbName = "test";
 
@@ -21,13 +21,14 @@ export interface ExtendedPGlite extends PGliteWithLive {
 
 export function PgLiteWorkerProvider({
   children,
+  debug,
 }: {
+  debug?: DebugLevel,
   children: React.ReactNode;
 }): React.ReactNode {
   const [pg, setPg] = useState<ExtendedPGlite>();
 
   const setPglite = async () => {
-    const debug = undefined;
     const pglite = (await PGliteWorker.create(
       new Worker(new URL("../../workers/pglite.ts", import.meta.url), {
         type: "module",
@@ -41,10 +42,11 @@ export function PgLiteWorkerProvider({
         meta: {
           dbName,
           electricBaseUrl:
-            process.env.NEXT_PUBLIC_ELECTRIC_SQL_BASE_URL || "/api/sync/",
+            process.env.NEXT_PUBLIC_ELECTRIC_SQL_BASE_URL ||
+            (typeof window !== 'undefined' ? new URL('/api/sync', window.location.origin).toString() : ''),
         },
       }
-    )) as PGliteWorkerWithLive;
+    ));
 
     const _db = createPgLiteClient(pglite);
 

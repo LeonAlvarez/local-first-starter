@@ -10,6 +10,8 @@ import TransactionHistory from "@/components/dashboard/transaction-history";
 import NotificationsAlerts from "@/components/dashboard/notification-alerts";
 import SettingsCustomization from "@/components/dashboard/settings-customization";
 import AnalyticsInsights from "@/components/dashboard/analytics-insights";
+import GroupManagement from "@/components/dashboard/groups";
+
 import { ScrollAreaScrollbar } from "@radix-ui/react-scroll-area";
 
 export default function Dashboard() {
@@ -20,6 +22,7 @@ export default function Dashboard() {
           <ScrollArea>
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="groups">Groups</TabsTrigger>
               <TabsTrigger value="expenses">Expenses</TabsTrigger>
               <TabsTrigger value="balances">Balances</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
@@ -41,6 +44,9 @@ export default function Dashboard() {
           </TabsContent>
           <TabsContent value="users" className="space-y-4">
             <UserEngagement />
+          </TabsContent>
+          <TabsContent value="groups" className="space-y-4">
+            <GroupManagement />
           </TabsContent>
           <TabsContent value="transactions" className="space-y-4">
             <TransactionHistory />

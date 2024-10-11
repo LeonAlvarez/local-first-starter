@@ -1,5 +1,6 @@
+import { ExtendedPGlite } from "@/components/providers/pglite";
 import { PGliteInterface } from "@electric-sql/pglite";
-import { PGliteWithLive } from "@electric-sql/pglite/live";
+import { LiveNamespace, PGliteWithLive } from "@electric-sql/pglite/live";
 import { PGliteWorker } from "@electric-sql/pglite/worker";
 import {
   schema,
@@ -29,9 +30,7 @@ const TablesToSync: TablesToSync = [
 
 let isLocalDBSchemaSynced = false;
 
-export type PGliteWorkerWithLive = PGliteWorker & {
-  live: PGliteWithLive["live"];
-};
+export type MyPGLiteWIthLive = (PGliteInterface | ExtendedPGlite) & LiveNamespace
 
 export async function runMigrations(pg: PGliteInterface, dbName: string) {
   const db = createPgLiteClient(pg);
@@ -61,11 +60,13 @@ export async function syncTables(
   pg: PGliteInterface,
   electricBaseUrl: string
 ) {
+  console.log('patata');
   const syncStart = performance.now();
   await Promise.all(
     TablesToSync.map(({ shape, table, primaryKey }) => {
-      //@ts-expect-error need to fix this interface type
-      pg.live?.syncShapeToTable({
+      console.log(`${electricBaseUrl}/${shape || table}`)
+      //@ts-ignore
+      pg?.electric?.syncShapeToTable({
         shape: { url: `${electricBaseUrl}/${shape || table}` },
         table,
         primaryKey: primaryKey || ["id"],
