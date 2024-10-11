@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,10 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 
 export default function SettingsCustomization() {
+  const { theme, setTheme } = useTheme();
   const [currency, setCurrency] = useState("USD");
   const [dateFormat, setDateFormat] = useState("MM/DD/YYYY");
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <div className="space-y-4">
@@ -63,13 +64,20 @@ export default function SettingsCustomization() {
               onCheckedChange={setNotifications}
             />
           </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="darkMode">Dark Mode</Label>
-            <Switch
-              id="darkMode"
-              checked={darkMode}
-              onCheckedChange={setDarkMode}
-            />
+          <div className="space-y-2">
+            <Label htmlFor="themePreference">Theme Preference</Label>
+            <Select value={theme} onValueChange={(value) => {
+              setTheme(value);
+            }}>
+              <SelectTrigger id="themePreference">
+                <SelectValue placeholder="Select theme preference" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
