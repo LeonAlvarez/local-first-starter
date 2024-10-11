@@ -4,10 +4,16 @@ import type { NextRequest } from "next/server";
 
 const PROTECTED_ROUTE = "/dashboard";
 const AUTH_ROUTE = "/auth/login";
+const DASHBOARD_ROUTE = "/dashboard"; // Add this line
 
 function isProtectedRoute(request: NextRequest) {
   const { pathname } = request.nextUrl;
   return pathname.startsWith(PROTECTED_ROUTE);
+}
+
+function isAuthRoute(request: NextRequest) { // Add this function
+  const { pathname } = request.nextUrl;
+  return pathname.startsWith("/auth");
 }
 
 export async function middleware(request: NextRequest) {
@@ -38,6 +44,11 @@ export async function middleware(request: NextRequest) {
         sameSite: "lax",
         expires: newExpiresAt,
       });
+
+      // Redirect to dashboard if user is logged in and accessing auth route
+      if (isAuthRoute(request)) {
+        return NextResponse.redirect(new URL(DASHBOARD_ROUTE, request.url));
+      }
     } catch (error) {
       // Log error and delete invalid session
       console.error(
