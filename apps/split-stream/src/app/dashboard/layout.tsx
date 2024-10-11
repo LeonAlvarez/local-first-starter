@@ -27,16 +27,16 @@ export default function AppLayout({
             </nav>
           </div>
         </header>
-        <PgLiteWorkerProvider>
-          <ScrollArea className="h-full">
+        <PgLiteWorkerProvider >
+          <ScrollArea className="flex-1 flex flex-col">
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
               <DashboardTabs />
               {children}
             </div>
           </ScrollArea>
         </PgLiteWorkerProvider>
-        <footer className="border-t">
-          <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">
+        <footer className="border-t mt-auto">
+          <div className="container mx-auto px-4 py-2 text-center text-xs text-muted-foreground">
             © 2024 SplitStream. All rights reserved.
           </div>
         </footer>

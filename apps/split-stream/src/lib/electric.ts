@@ -63,12 +63,6 @@ export async function syncTables(
   const syncStart = performance.now();
   await Promise.all(
     TablesToSync.map(({ shape, table, primaryKey }) => {
-      console.log({
-        shape: { url: `${electricBaseUrl}/${shape || table}` },
-        table,
-        primaryKey: primaryKey || ["id"],
-        shapeKey: shape || table,
-      })
       //@ts-expect-error Need to properpy type extension
       pg?.electric?.syncShapeToTable({
         shape: { url: `${electricBaseUrl}/${shape || table}` },
