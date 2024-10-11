@@ -6,17 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLiveQuery } from '@electric-sql/pglite-react';
-
-// Mock data for groups
-const initialGroups = [
-  { id: 1, name: 'Family', memberCount: 4 },
-  { id: 2, name: 'Roommates', memberCount: 3 },
-  { id: 3, name: 'Vacation 2023', memberCount: 6 },
-];
+import { Group } from 'db/schema';
 
 const GroupManagement: React.FC = () => {
   const [newGroupName, setNewGroupName] = useState('');
-  const groups = useLiveQuery(`select * from groups`, [])?.rows || []
+
+  const groups = useLiveQuery<Group>(`select * from groups order by id`, [])?.rows || []
 
   const handleCreateGroup = () => {
     if (newGroupName.trim()) {
@@ -60,7 +55,7 @@ const GroupManagement: React.FC = () => {
               <div key={group.id} className="flex justify-between items-center p-2 border-b">
                 <div>
                   <h3 className="font-semibold">{group.name}</h3>
-                  <p className="text-sm text-gray-500">{group.memberCount} members</p>
+                  <p className="text-sm text-gray-500">{0} members</p>
                 </div>
                 <Button variant="outline" size="sm">Manage</Button>
               </div>

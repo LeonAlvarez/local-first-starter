@@ -1,5 +1,5 @@
 export const revalidate = 0;
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 export async function GET(
   request: Request,
@@ -10,13 +10,14 @@ export async function GET(
     const { shape } = params;
 
     const electricUrl = new URL(`${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${shape}`);
-    console.log(electricUrl);
 
     url.searchParams.forEach((value, key) => {
       if ([`shape_id`, `offset`, 'live'].includes(key)) {
         electricUrl.searchParams.set(key, value)
       }
     });
+
+    console.log(url)
 
     let resp = await fetch(electricUrl.toString(), {
       cache: 'no-store',

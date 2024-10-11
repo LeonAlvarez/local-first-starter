@@ -7,5 +7,17 @@
     "bps": true,
     "folderMillis": 1728634784007,
     "hash": "618010674c6023212df8c632a52c04ecd7d8605e8b47bfbd14cbc02793cf625d"
+  },
+  {
+    "sql": [
+      "DO $$ BEGIN\n CREATE TYPE \"public\".\"role\" AS ENUM('OWNER', 'ADMIN', 'USER');\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nCREATE TABLE IF NOT EXISTS \"users_groups\" (\n\t\"user_id\" integer NOT NULL,\n\t\"group_id\" integer NOT NULL,\n\t\"role\" \"role\" DEFAULT 'USER' NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL\n);\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"users_groups\" ADD CONSTRAINT \"users_groups_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"users_groups\" ADD CONSTRAINT \"users_groups_group_id_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"groups\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"unique_user_group\" ON \"users_groups\" USING btree (\"user_id\",\"group_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1728665790641,
+    "hash": "620bbeb2788304e7859d2abf45d60c042e1e9184167da435528397f9b676f2d9"
   }
 ]

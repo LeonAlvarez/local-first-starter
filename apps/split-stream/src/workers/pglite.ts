@@ -6,7 +6,8 @@ import { runMigrations, syncTables } from '@/lib/electric'
 worker({
   async init(options: PGliteWorkerOptions) {
     const pg = await PGlite.create({
-      dataDir: 'idb://split-stream',
+      //dataDir: 'idb://split-stream',
+      dataDir: 'memory://myDBName',
       relaxedDurability: true,
       extensions: {
         electric: electricSync({ debug: options?.debug !== undefined }),

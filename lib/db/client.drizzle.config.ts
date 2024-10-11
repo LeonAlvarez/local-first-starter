@@ -8,7 +8,7 @@ export default defineConfig({
   schema: [
     `./schemas/users.ts`,
     `./schemas/groups.ts`,
-    `./schemas/users-group.ts`
+    `./schemas/users-groups.ts`
   ],
   out: migrationsFolder,
   verbose: true,
