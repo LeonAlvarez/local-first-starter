@@ -28,7 +28,7 @@ export function PgLiteWorkerProvider({
 }): React.ReactNode {
   const [pg, setPg] = useState<ExtendedPGlite>();
 
-  const setPglite = async () => {
+  const setPglite = React.useCallback(async () => {
     const pglite = (await PGliteWorker.create(
       new Worker(new URL("../../workers/pglite.ts", import.meta.url), {
         type: "module",
@@ -56,12 +56,12 @@ export function PgLiteWorkerProvider({
     });
 
     setPg(pglite as unknown as ExtendedPGlite);
-  };
+  }, [debug]); // Add debug as a dependency
 
   useEffect(() => {
     if (pg) return;
     setPglite();
-  }, [pg]);
+  }, [pg, setPglite]); // Add setPglite to the dependency array
 
   if (!pg?._db) return <div>Loading</div>;
   return <PGliteProvider db={pg as PGliteWithLive}>{children}</PGliteProvider>;

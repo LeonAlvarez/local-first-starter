@@ -17,8 +17,6 @@ export async function GET(
       }
     });
 
-    console.log(url)
-
     let resp = await fetch(electricUrl.toString(), {
       cache: 'no-store',
       headers: {
