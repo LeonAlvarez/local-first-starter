@@ -13,12 +13,6 @@ export interface ExtendedPGlite extends PGliteWithLive {
   _db: PgDatabase<PgQueryResultHKT, typeof schema>;
 }
 
-// const ELECTRIC_SQL_BASE_URL =
-//   process.env.NEXT_PUBLIC_ELECTRIC_SQL_BASE_URL ||
-//   (typeof window !== "undefined"
-//     ? new URL("/api/sync/", window.location.origin).toString()
-//     : "/api/sync/");
-
 export function PgLiteWorkerProvider({
   children,
   debug,

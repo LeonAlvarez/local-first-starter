@@ -1,7 +1,6 @@
 import { ExtendedPGlite } from "@/components/providers/pglite";
 import { PGliteInterface } from "@electric-sql/pglite";
-import { LiveNamespace, PGliteWithLive } from "@electric-sql/pglite/live";
-import { PGliteWorker } from "@electric-sql/pglite/worker";
+import { LiveNamespace } from "@electric-sql/pglite/live";
 import {
   schema,
   createPgLiteClient,
@@ -70,7 +69,7 @@ export async function syncTables(
         primaryKey: primaryKey || ["id"],
         shapeKey: shape || table,
       })
-      //@ts-ignore
+      //@ts-expect-error Need to properpy type extension
       pg?.electric?.syncShapeToTable({
         shape: { url: `${electricBaseUrl}/${shape || table}` },
         table,
