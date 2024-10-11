@@ -1,5 +1,5 @@
 export const revalidate = 0;
-export const maxDuration = 300; // Increase to 5 minutes for long-polling
+export const maxDuration = 60;
 
 export async function GET(
   request: Request,
