@@ -6,8 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Icons } from "@/components/ui/icons";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { ArrowRight, PieChart, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
             </p>
             <Button asChild size="lg">
               <Link href="/dashboard">
-                Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                Get Started <Icons.arrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </section>
@@ -42,7 +42,7 @@ export default function Home() {
           <section className="grid gap-8 md:grid-cols-3">
             <Card>
               <CardHeader className="items-center">
-                <Wallet className="h-10 w-10 mb-2 text-primary" />
+                <Icons.wallet className="h-10 w-10 mb-2 text-primary" />
                 <CardTitle>Easy Expense Tracking</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
@@ -54,7 +54,7 @@ export default function Home() {
             </Card>
             <Card>
               <CardHeader className="items-center">
-                <PieChart className="h-10 w-10 mb-2 text-primary" />
+                <Icons.pieChart className="h-10 w-10 mb-2 text-primary" />
                 <CardTitle>Insightful Reports</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
@@ -66,7 +66,7 @@ export default function Home() {
             </Card>
             <Card>
               <CardHeader className="items-center">
-                <Users className="h-10 w-10 mb-2 text-primary" />
+                <Icons.users className="h-10 w-10 mb-2 text-primary" />
                 <CardTitle>Expense Sharing</CardTitle>
               </CardHeader>
               <CardContent className="text-center">
@@ -84,7 +84,7 @@ export default function Home() {
             </h2>
             <Button asChild size="lg">
               <Link href="/dashboard">
-                Start Tracking Now <ArrowRight className="ml-2 h-4 w-4" />
+                Start Tracking Now <Icons.arrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </section>
