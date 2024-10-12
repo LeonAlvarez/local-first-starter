@@ -11,10 +11,11 @@ import { groupsQuery } from "db/query/groups";
 import { ExtendedPGlite } from "@/components/providers/pglite";
 import { useUser } from "@/components/providers/user";
 import { schema, ilike } from "db/client";
+import Link from "next/link";
 
 type GroupWithCount = Group & { usersCount: number };
 
-const GroupManagement: React.FC = () => {
+const MyGroups: React.FC = () => {
   const [newGroupName, setNewGroupName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useUser();
@@ -93,7 +94,9 @@ const GroupManagement: React.FC = () => {
                     </p>
                   </div>
                   <Button variant="outline" size="sm">
-                    Manage
+                    <Link href={`/dashboard/groups/${group.id}`}>
+                      Manage
+                    </Link>
                   </Button>
                 </div>
               ))}
@@ -105,4 +108,4 @@ const GroupManagement: React.FC = () => {
   );
 };
 
-export default GroupManagement;
+export default MyGroups;

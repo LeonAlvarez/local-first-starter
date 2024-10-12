@@ -1,12 +1,15 @@
 import { type SQL, and, eq, getTableColumns, sql } from "drizzle-orm";
 import { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
-import groups from "../schemas/groups";
+import groups, { Group } from "../schemas/groups";
 import userGroups from "../schemas/users-groups";
 import { type User } from "../schemas/users";
 import usersGroups from "../schemas/users-groups";
+import users from "../schemas/users";
 
 type groupSchema = {
   groups: typeof groups;
+  usersGroups: typeof usersGroups;
+  users: typeof users;
 };
 
 export type DbType = PgDatabase<PgQueryResultHKT, groupSchema>;
@@ -48,9 +51,30 @@ export function groupsQuery(db: DbType) {
       .where(and(eq(userGroups.userId, userId), filters))
   };
 
+  const getGroupWithMembers = (groupId: Group["id"]) => {
+    return db
+      .select({
+        ...getTableColumns(groups),
+        members: sql<User[]>`json_agg(json_build_object(
+          'id', ${users.id},
+          'userName', ${users.userName},
+          'firstName', ${users.firstName},
+          'lastName', ${users.lastName},
+          'role', ${usersGroups.role},
+          'email', ${users.email}
+        ))`.as('members'),
+      })
+      .from(groups)
+      .leftJoin(usersGroups, eq(groups.id, usersGroups.groupId))
+      .leftJoin(users, eq(usersGroups.userId, users.id))
+      .where(eq(groups.id, groupId))
+      .groupBy(groups.id);
+  };
+
   return {
     getGroups,
     getUserGroups,
     getUserGroupsWithMemberCount,
+    getGroupWithMembers,
   };
 }
