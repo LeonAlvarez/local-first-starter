@@ -10,7 +10,7 @@ import { Group } from "db/schema";
 import { groupsQuery } from "db/query/groups";
 import { ExtendedPGlite } from "@/components/providers/pglite";
 import { useUser } from "@/components/providers/user";
-import { schema, ilike, and } from "db/client";
+import { schema, ilike } from "db/client";
 
 type GroupWithCount = Group & { usersCount: number };
 
