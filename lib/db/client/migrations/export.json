@@ -19,5 +19,19 @@
     "bps": true,
     "folderMillis": 1728665790641,
     "hash": "620bbeb2788304e7859d2abf45d60c042e1e9184167da435528397f9b676f2d9"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"expenses\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"description\" varchar(255) NOT NULL,\n\t\"amount\" integer NOT NULL,\n\t\"payer_id\" integer NOT NULL,\n\t\"group_id\" integer,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"expense_shares\" (\n\t\"id\" serial PRIMARY KEY NOT NULL,\n\t\"expense_id\" integer,\n\t\"user_id\" integer NOT NULL,\n\t\"group_id\" integer,\n\t\"share_amount\" integer NOT NULL,\n\t\"created_at\" timestamp DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp DEFAULT now() NOT NULL\n);\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"expenses\" ADD CONSTRAINT \"expenses_payer_id_users_id_fk\" FOREIGN KEY (\"payer_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"expenses\" ADD CONSTRAINT \"expenses_group_id_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"groups\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"expense_shares\" ADD CONSTRAINT \"expense_shares_expense_id_expenses_id_fk\" FOREIGN KEY (\"expense_id\") REFERENCES \"public\".\"expenses\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"expense_shares\" ADD CONSTRAINT \"expense_shares_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n",
+      "\nDO $$ BEGIN\n ALTER TABLE \"expense_shares\" ADD CONSTRAINT \"expense_shares_group_id_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"groups\"(\"id\") ON DELETE no action ON UPDATE no action;\nEXCEPTION\n WHEN duplicate_object THEN null;\nEND $$;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1728742391452,
+    "hash": "c7299c6e822d8477dde0bcbb91f81e7ff60c33065b9fc4d1de11de5dbefe9351"
   }
 ]

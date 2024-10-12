@@ -15,6 +15,13 @@
       "when": 1728665790641,
       "tag": "0001_high_spyke",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728742391452,
+      "tag": "0002_illegal_swordsman",
+      "breakpoints": true
     }
   ]
 }
