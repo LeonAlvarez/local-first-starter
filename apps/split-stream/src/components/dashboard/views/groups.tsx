@@ -10,7 +10,7 @@ import { Group } from "db/schema";
 import { groupsQuery } from "db/query/groups";
 import { ExtendedPGlite } from "@/components/providers/pglite";
 import { useUser } from "@/components/providers/user";
-import { schema, ilike } from "db/client";
+import { schema, ilike, and } from "db/client";
 
 type GroupWithCount = Group & { usersCount: number };
 
@@ -20,17 +20,20 @@ const GroupManagement: React.FC = () => {
   const { user } = useUser();
   const pg = usePGlite() as ExtendedPGlite;
 
-  const { getUserGroupsWithCount } = useMemo(() => groupsQuery(pg._db), [pg]);
+  const { getUserGroupsWithMemberCount } = useMemo(
+    () => groupsQuery(pg._db),
+    [pg]
+  );
 
   const { sql, params } = useMemo(
     () =>
-      getUserGroupsWithCount(user.id)
-        .$dynamic()
-        .where(
-          searchTerm ? ilike(schema.groups.name, `%${searchTerm}%`) : undefined
-        )
+      getUserGroupsWithMemberCount(
+        user.id,
+        ilike(schema.groups.name, `%${searchTerm}%`)
+      )
+        .orderBy(schema.groups.id)
         .toSQL(),
-    [searchTerm, user.id, getUserGroupsWithCount]
+    [searchTerm, user, getUserGroupsWithMemberCount]
   );
 
   const groups = useLiveQuery<GroupWithCount>(sql, params)?.rows || [];

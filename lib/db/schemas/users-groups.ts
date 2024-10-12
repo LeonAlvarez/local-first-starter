@@ -3,7 +3,7 @@ import {
   pgEnum,
   pgTable,
   timestamp,
-  uniqueIndex
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 import { users } from "./users";
@@ -31,8 +31,8 @@ export const userGroups = pgTable(
     groupId: integer("group_id")
       .references(() => groups.id)
       .notNull(),
-    role: groupRoleEnum().default(TeamRole.USER).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    role: groupRoleEnum().notNull().default(TeamRole.USER),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => {
     return {
