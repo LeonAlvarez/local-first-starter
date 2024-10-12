@@ -8,8 +8,8 @@ import users from "../schemas/users";
 
 type groupSchema = {
   groups: typeof groups;
-  usersGroups: typeof usersGroups;
   users: typeof users;
+  usersGroups: typeof usersGroups;
 };
 
 export type DbType = PgDatabase<PgQueryResultHKT, groupSchema>;

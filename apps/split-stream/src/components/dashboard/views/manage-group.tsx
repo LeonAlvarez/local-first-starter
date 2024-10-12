@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TeamRole } from "db/schemas/users-groups";
+import { DbType as GroupsDbType } from 'db/query/groups';
 
 type GroupWithMembers = Group & {
   members: {
@@ -36,7 +37,7 @@ export default function ManageGroup({ id }: { id: string }) {
   const { user } = useUser();
 
   const { getGroupWithMembers } = useMemo(
-    () => groupsQuery(pg._db as any),
+    () => groupsQuery(pg._db as unknown as GroupsDbType),
     [pg]
   );
 
