@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLiveQuery, usePGlite } from "@electric-sql/pglite-react";
 import { Group } from "db/schema";
-import { groupsQuery } from "db/query/groups";
+import { groupsQuery, DbType as GroupsDbType } from "db/query/groups";
 import { ExtendedPGlite } from "@/components/providers/pglite";
 import { useUser } from "@/components/providers/user";
 import { schema, ilike } from "db/client";
@@ -22,7 +22,7 @@ const MyGroups: React.FC = () => {
   const pg = usePGlite() as ExtendedPGlite;
 
   const { getUserGroupsWithMemberCount } = useMemo(
-    () => groupsQuery(pg._db),
+    () => groupsQuery(pg._db as unknown as GroupsDbType),
     [pg]
   );
 
