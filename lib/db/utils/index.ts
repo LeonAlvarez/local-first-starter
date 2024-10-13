@@ -2,7 +2,6 @@ import { getTableColumns, Simplify, Table, TableConfig } from "drizzle-orm";
 import { PgTableWithColumns, PgSelect } from "drizzle-orm/pg-core";
 import { AnyColumn, Column, DriverValueDecoder, getTableName, is, SelectedFieldsOrdered, SQL } from "drizzle-orm";
 
-// https://github.com/drizzle-team/drizzle-orm/blob/6974798737a2710a6dc6d37d772442d2c895c987/drizzle-orm/src/utils.ts#L73
 export function mapJsonArray<T extends TableConfig, Q>(
   table: PgTableWithColumns<T>,
   rows: Q[]
@@ -12,6 +11,7 @@ export function mapJsonArray<T extends TableConfig, Q>(
   )
 }
 
+// https://github.com/drizzle-team/drizzle-orm/blob/6974798737a2710a6dc6d37d772442d2c895c987/drizzle-orm/src/utils.ts#L73
 export function orderSelectedFields<TColumn extends AnyColumn>(
 	fields: Record<string, unknown>,
 	pathPrefix?: string[],

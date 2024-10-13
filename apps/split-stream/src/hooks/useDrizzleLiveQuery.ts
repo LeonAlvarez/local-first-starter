@@ -16,9 +16,9 @@ export const useNewDrizzleLiveQuery = <
   defaultValue,
   debug = false,
 }: {
-  queryFn: (db: DbType, data: E) => T,
+  queryFn: (db: DbType, data?: E) => T,
   key: string;
-  data: E;
+  data?: E;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any;
   debug?: boolean;
@@ -31,8 +31,8 @@ export const useNewDrizzleLiveQuery = <
       if (!db._db) return null;
       return queryFn(db._db, data)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @typescript-eslint/no-explicit-any
-    [db._db, ...Object.values(data as any)]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [db._db, ...Object.values(data || {})]
   );
 
   const fields = useMemo(() => {
@@ -70,6 +70,7 @@ export const useNewDrizzleLiveQuery = <
       setResults(mapResults(results))
     };
 
+    //@ts-expect-error toSQL exist in Omit<PgSelect>
     const { sql, params } = query.toSQL();
 
     if (debug) {

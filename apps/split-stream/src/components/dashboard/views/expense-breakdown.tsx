@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useUser } from "@/components/providers/user";
 import { categoriesMap, expensesQuery } from "db/query/expenses";
 import { useNewDrizzleLiveQuery } from "@/hooks/useDrizzleLiveQuery";
@@ -39,19 +39,10 @@ const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
 export default function ExpenseBreakdown() {
   const { user } = useUser();
 
-  const queryFn = useCallback(() => {
-    return (db: DbType, data: { userId: number }) =>
-      expensesQuery(db)
-        .getUserExpenses(data.userId)
-        .orderBy(schema.expenses.id);
-  }, []);
-
   const expenses = useNewDrizzleLiveQuery({
-    queryFn: queryFn(),
+    queryFn: (db: DbType) =>
+      expensesQuery(db).getUserExpenses(user.id).orderBy(schema.expenses.id),
     key: "expenses",
-    data: {
-      userId: user.id,
-    },
     debug: true,
   });
 
