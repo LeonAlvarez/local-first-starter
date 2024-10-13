@@ -53,7 +53,7 @@ export function PgLiteWorkerProvider({
     });
 
     setPg(pglite as unknown as ExtendedPGlite);
-  }, [debug]); // Add debug as a dependency
+  }, [debug, user.id]); // Add debug as a dependency
 
   useEffect(() => {
     if (pg) return;

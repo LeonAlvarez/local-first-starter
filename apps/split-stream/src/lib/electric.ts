@@ -155,7 +155,7 @@ export async function waterFallingSync(
   const expensesTable = getTableName(schema.expenses);
   const expenseSharesTable = getTableName(schema.expenseShares);
 
-  let currentSubscriptions = new Map<
+  const currentSubscriptions = new Map<
     string,
     ShapeSyncResult | ShapeSyncResult[]
   >();
