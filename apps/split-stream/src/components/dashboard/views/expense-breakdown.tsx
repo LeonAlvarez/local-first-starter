@@ -15,7 +15,7 @@ import { useCallback, useMemo } from "react";
 import { useUser } from "@/components/providers/user";
 import { categoriesMap, expensesQuery } from "db/query/expenses";
 import { useNewDrizzleLiveQuery } from "@/hooks/useDrizzleLiveQuery";
-import { AnyPgSelect, DbType, schema } from "db/client";
+import { DbType, schema } from "db/client";
 import { Expense, ExpenseShare } from "db/schema";
 import { formatCents } from "@/lib/format";
 
@@ -43,27 +43,21 @@ export default function ExpenseBreakdown() {
     return (db: DbType, data: { userId: number }) =>
       expensesQuery(db)
         .getUserExpenses(data.userId)
-        .orderBy(schema.expenses.id) as unknown as AnyPgSelect;
+        .orderBy(schema.expenses.id);
   }, []);
 
-  // const expenses = (
-  //   useDrizzleLiveQuery(
-  //     getUserExpenses(user.id) as unknown as AnyPgSelect
-  //   ) as UserExpense
-  // )
-
-  const expenses = (useNewDrizzleLiveQuery({
+  const expenses = useNewDrizzleLiveQuery({
     queryFn: queryFn(),
     key: "expenses",
     data: {
       userId: user.id,
     },
     debug: true,
-  })) as UserExpense[];
+  });
 
   const groupedExpenses = useMemo(() => {
     const grouped = (expenses || []).reduce((acc, { type, share }) => {
-      const { name, label, color } = categoriesMap[type];
+      const { name, label, color } = categoriesMap[type!] || categoriesMap.misc;
       if (!acc[name]) {
         acc[name] = {
           label,

@@ -65,7 +65,3 @@ export function expensesQuery(db: DbType) {
     getUserExpenses,
   };
 }
-
-export type FixMeWeirdType = ReturnType<
-  ReturnType<typeof expensesQuery>["getUserExpenses"]
->;

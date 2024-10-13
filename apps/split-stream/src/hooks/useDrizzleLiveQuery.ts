@@ -5,7 +5,11 @@ import { AnyPgSelect, DbType } from "db/client";
 import { mapResultRow, orderSelectedFields } from "db/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export const useNewDrizzleLiveQuery = <T extends AnyPgSelect, E = undefined>({
+export const useNewDrizzleLiveQuery = <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends (AnyPgSelect | Omit<AnyPgSelect, any>),
+  E = undefined
+>({
   queryFn,
   key,
   data,
@@ -79,7 +83,7 @@ export const useNewDrizzleLiveQuery = <T extends AnyPgSelect, E = undefined>({
       cancelled = true;
       ret.then(({ unsubscribe }) => unsubscribe());
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db, debug, key, query, mapResults]);
 
   return results || defaultValue as Awaited<T>;
