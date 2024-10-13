@@ -37,7 +37,7 @@ export const useNewDrizzleLiveQuery = <
 
   const fields = useMemo(() => {
     if (!query) return [];
-    const selectedFields = query._.selectedFields;
+    const selectedFields = (query as AnyPgSelect)._.selectedFields;
     const orderedFields = orderSelectedFields(selectedFields);
 
     return orderedFields;
