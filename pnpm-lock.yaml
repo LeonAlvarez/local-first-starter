@@ -23,8 +23,8 @@ importers:
         specifier: ^0.2.13
         version: 0.2.13(@electric-sql/pglite@0.2.12)
       '@electric-sql/react':
-        specifier: ^0.4.3
-        version: 0.4.3(react@18.3.1)
+        specifier: ^0.4.4
+        version: 0.4.4(react@18.3.1)
       '@radix-ui/react-avatar':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -221,9 +221,6 @@ packages:
   '@drizzle-team/brocli@0.10.1':
     resolution: {integrity: sha512-AHy0vjc+n/4w/8Mif+w86qpppHuF3AyXbcWW+R/W7GNA3F5/p2nuhlkCJaTXSLZheB4l1rtHzOfr9A7NwoR/Zg==}
 
-  '@electric-sql/client@0.6.1':
-    resolution: {integrity: sha512-fINCVS66lqxm9AMnIOK+qOXp89GoKjSMCVX3UQ+PxGtYwtk3SJUrsDTuPslQNZt/0hKyUMi7sHAPI2peaBpn9Q==}
-
   '@electric-sql/client@0.6.2':
     resolution: {integrity: sha512-2zoAfQ43u5Hyor3Xw3XAG+6P/f+hGgKabc5IqWdQtcRg7wRVqQM0cLkwk1BHZUfJniKZJS5U86EaskXSHl9wYg==}
 
@@ -249,8 +246,8 @@ packages:
   '@electric-sql/pglite@0.2.12':
     resolution: {integrity: sha512-J/X42ujcoFEbOkgRyoNqZB5qcqrnJRWVlwpH3fKYoJkTz49N91uAK/rDSSG/85WRas9nC9mdV4FnMTxnQWE/rw==}
 
-  '@electric-sql/react@0.4.3':
-    resolution: {integrity: sha512-n2kAhMQOlLg9qH0EAzI1v7G3TJlFePN0toiOiN7oc0yUDk452ba+qyp1byXdSe2AVXT2qDB5Of2mBR/r+2VXNw==}
+  '@electric-sql/react@0.4.4':
+    resolution: {integrity: sha512-jfC17hrNEMBuRiAzzeh7g5dkdEdKdflVh/l6Jyw8CTLMS94yYSSfmZVwsNnj73ROCiYUICj3ofa6U8EM7KRgxw==}
     peerDependencies:
       react: ^18.3.1
     peerDependenciesMeta:
@@ -3160,10 +3157,6 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.1': {}
 
-  '@electric-sql/client@0.6.1':
-    optionalDependencies:
-      '@rollup/rollup-darwin-arm64': 4.24.0
-
   '@electric-sql/client@0.6.2':
     optionalDependencies:
       '@rollup/rollup-darwin-arm64': 4.24.0
@@ -3206,9 +3199,9 @@ snapshots:
 
   '@electric-sql/pglite@0.2.12': {}
 
-  '@electric-sql/react@0.4.3(react@18.3.1)':
+  '@electric-sql/react@0.4.4(react@18.3.1)':
     dependencies:
-      '@electric-sql/client': 0.6.1
+      '@electric-sql/client': 0.6.2
       use-sync-external-store: 1.2.2(react@18.3.1)
     optionalDependencies:
       react: 18.3.1
@@ -4729,7 +4722,7 @@ snapshots:
       debug: 4.3.7
       enhanced-resolve: 5.17.1
       eslint: 8.57.1
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.1
       is-bun-module: 1.2.1
@@ -4742,7 +4735,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -4764,7 +4757,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.8.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3

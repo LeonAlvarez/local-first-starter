@@ -37,6 +37,9 @@ const MyGroups: React.FC = () => {
     [searchTerm, user, getUserGroupsWithMemberCount]
   );
 
+  console.log(sql)
+  console.log(params)
+
   const groups = useLiveQuery<GroupWithCount>(sql, params)?.rows || [];
 
   const handleCreateGroup = () => {

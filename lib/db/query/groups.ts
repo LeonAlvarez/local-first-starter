@@ -6,13 +6,13 @@ import { type User } from "../schemas/users";
 import usersGroups from "../schemas/users-groups";
 import users from "../schemas/users";
 
-type groupSchema = {
+type groupsSchema = {
   groups: typeof groups;
   users: typeof users;
   usersGroups: typeof usersGroups;
 };
 
-export type DbType = PgDatabase<PgQueryResultHKT, groupSchema>;
+export type DbType = PgDatabase<PgQueryResultHKT, groupsSchema>;
 
 export function groupsQuery(db: DbType) {
   const getGroups = (where?: SQL) => {

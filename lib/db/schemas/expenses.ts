@@ -7,6 +7,7 @@ import { z } from 'zod';
 export const expenses = pgTable('expenses', {
   id: serial('id').primaryKey(),
   description: varchar('description', { length: 255 }).notNull(),
+  type: varchar('type', { length: 255 }).default('misc').notNull(),
   amount: integer('amount').notNull(),
   payerId: integer('payer_id').references(() => users.id).notNull(),
   groupId: integer('group_id').references(() => groups.id),

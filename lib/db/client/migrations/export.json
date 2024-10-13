@@ -33,5 +33,21 @@
     "bps": true,
     "folderMillis": 1728742391452,
     "hash": "c7299c6e822d8477dde0bcbb91f81e7ff60c33065b9fc4d1de11de5dbefe9351"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"expenses\" ADD COLUMN \"type\" varchar(255) NOT NULL;"
+    ],
+    "bps": true,
+    "folderMillis": 1728747644970,
+    "hash": "31bd2ee397d244c881d7ee382e2d5b78ba2a29791dfb2f5b222bd5d63524bb4a"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"expenses\" ALTER COLUMN \"type\" SET DEFAULT 'misc';"
+    ],
+    "bps": true,
+    "folderMillis": 1728759448298,
+    "hash": "118c9b8bef7cf59d98bd3449c216d4d2f32764758541cf911ca491f80ba2c70f"
   }
 ]

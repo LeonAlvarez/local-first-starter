@@ -27,7 +27,7 @@ export default function AppLayout({
             </nav>
           </div>
         </header>
-        <PgLiteWorkerProvider >
+        <PgLiteWorkerProvider debug={1}>
           <ScrollArea className="flex-1 flex flex-col">
             <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
               <DashboardTabs />

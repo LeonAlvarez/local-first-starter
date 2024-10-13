@@ -6,8 +6,8 @@ export type { PgDatabase, PgQueryResultHKT, PgSelect } from "drizzle-orm/pg-core
 export * from "drizzle-orm";
 
 const queryClient = neon(process.env.DATABASE_URL!);
-const queryPoolingClient = neon(process.env.DATABASE_POOL_URL!);
-export const db = drizzle(queryClient, { schema } as DrizzleConfig<typeof schema>);
-export const dbPool = drizzle(queryPoolingClient, { schema } as DrizzleConfig<typeof schema>);
+const poolQueryClient = neon(process.env.DATABASE_POOL_URL!);
+export const db = drizzle(poolQueryClient, { schema } as DrizzleConfig<typeof schema>);
+export const nonPoolDb = drizzle(queryClient, { schema } as DrizzleConfig<typeof schema>);
 
 export default db;

@@ -15,7 +15,7 @@ type TablesToSync = {
   primaryKey?: string[];
 }[];
 
-const TablesToSync: TablesToSync = [
+export const TablesToSync: TablesToSync = [
   {
     table: getTableName(schema.users),
   },
@@ -25,7 +25,13 @@ const TablesToSync: TablesToSync = [
   {
     table: getTableName(schema.userGroups),
   },
-];
+  {
+    table: getTableName(schema.expenses),
+  },
+  {
+    table: getTableName(schema.expenseShares),
+  },
+] as const;
 
 let isLocalDBSchemaSynced = false;
 
@@ -55,17 +61,42 @@ export async function runMigrations(pg: PGliteInterface, dbName: string) {
   return db;
 }
 
+export async function dropFks(pg: PGliteInterface) {
+  await pg.query(`
+    DO $$ 
+      DECLARE 
+        r RECORD;
+        table_names TEXT[] := ARRAY['${TablesToSync.map(({ table }) => table).join("','")}'];
+      BEGIN 
+        RAISE NOTICE 'Table names: %', table_names;
+        FOR r IN 
+          SELECT 
+            conname, 
+            conrelid::regclass AS table_name 
+          FROM 
+              pg_constraint 
+          WHERE 
+              contype = 'f' 
+              AND conname LIKE '%_fk' 
+              AND conrelid::regclass::text = ANY(table_names)
+        LOOP 
+            EXECUTE format('ALTER TABLE %I DROP CONSTRAINT %I', r.table_name, r.conname);
+        END LOOP; 
+    END $$; 
+  `);
+}
+
 export async function syncTables(
   pg: PGliteInterface,
   electricBaseUrl: string
 ) {
-  console.log('patata');
   const syncStart = performance.now();
   await Promise.all(
     TablesToSync.map(({ shape, table, primaryKey }) => {
+      const shapeUrl = `${electricBaseUrl}/${shape || table}`
       //@ts-expect-error Need to properpy type extension
       pg?.electric?.syncShapeToTable({
-        shape: { url: `${electricBaseUrl}/${shape || table}` },
+        shape: { url: shapeUrl },
         table,
         primaryKey: primaryKey || ["id"],
         shapeKey: shape || table,

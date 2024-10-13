@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { dbPool as db } from "./index";
+import { db } from "./index";
 import schema, { groups, users } from "./schema";
 import usersGroups, {
   type InsertUserGroup,
@@ -13,13 +13,12 @@ import expenseShares from "./schemas/expense-shares";
 import type { InsertExpense } from "./schemas/expenses";
 import type { InsertExpenseShare } from "./schemas/expense-shares";
 import { eq, getTableColumns, sql } from "drizzle-orm";
-import { group } from "console";
+import { categories } from "./query/expenses";
 
 const baseUsers = [
   { email: "admin@example.com", password: "admin123" },
   { email: "user@example.com", password: "user123" },
 ];
-const numberOfGroups = 100;
 
 async function createUser(email?: string, password?: string) {
   const user: InsertUser = {
@@ -79,7 +78,7 @@ async function seedUsers(numberOfUsers: number) {
   console.log("Users created successfully.");
 }
 
-async function seedGroups() {
+async function seedGroups(numberOfGroups: number) {
   // Create groups
   console.log(`Creating ${numberOfGroups} groups...`);
 
@@ -134,7 +133,7 @@ async function seedGroups() {
   console.log("Users assigned to groups successfully.");
 }
 
-async function seedIndivualExapenses({
+async function seedIndivualExpenses({
   minExpensesPerUser,
   maxExpensesPerUser,
   minAmount,
@@ -159,8 +158,9 @@ async function seedIndivualExapenses({
     return Array.from({ length: numberOfExpenses }, () => ({
       description: faker.finance.transactionDescription(),
       amount: faker.number.int({ min: minAmount, max: maxAmount }),
+      type: faker.helpers.arrayElement(categories).name,
       payerId: userId,
-    }));
+    } as InsertExpense));
   };
 
   const allExpenses = usersIds.flatMap(createExpensesForUser);
@@ -215,6 +215,7 @@ async function seedGroupExpenses({
         return {
           description: faker.finance.transactionDescription(),
           amount: faker.number.int({ min: minAmount, max: maxAmount }),
+          type: faker.helpers.arrayElement(categories).name,
           payerId: payer.id,
           groupId: id,
         };
@@ -283,17 +284,17 @@ async function seedGroupExpensesShares() {
 
 async function seedDatabase() {
   console.log("Starting database seeding...");
-  await seedUsers(30);
-  await seedGroups();
-  await seedIndivualExapenses({
-    minExpensesPerUser: 2,
-    maxExpensesPerUser: 230,
+  // await seedUsers(30);
+  // await seedGroups(100);
+  await seedIndivualExpenses({
+    minExpensesPerUser: 20,
+    maxExpensesPerUser: 30,
     minAmount: 500,
     maxAmount: 500000,
   });
   await seedGroupExpenses({
-    minExpensesPerGroup: 1,
-    maxExpensesPerGroup: 5,
+    minExpensesPerGroup: 3,
+    maxExpensesPerGroup: 25,
     minAmount: 300,
     maxAmount: 100000,
   });
