@@ -82,8 +82,8 @@ export async function dropFks(pg: PGliteInterface) {
       DECLARE 
         r RECORD;
         table_names TEXT[] := ARRAY['${TablesToSync.map(
-    ({ table }) => table
-  ).join("','")}'];
+          ({ table }) => table
+        ).join("','")}'];
       BEGIN 
         RAISE NOTICE 'Table names: %', table_names;
         FOR r IN 
@@ -159,7 +159,7 @@ export async function waterFallingSync(
     string,
     ShapeSyncResult | ShapeSyncResult[]
   >();
-  const removeCurrentSubcription = (key: string) => {
+  const removeCurrentSubcription = async (key: string) => {
     const subscription = currentSubscriptions.get(key);
 
     if (!subscription) {
@@ -169,12 +169,18 @@ export async function waterFallingSync(
 
     if (!Array.isArray(subscription)) {
       subscription.unsubscribe();
-      console.log( `✅ ${key} subscription removed`)
-    } else if (subscription) {
-      subscription.forEach((sub) => sub.unsubscribe());
-      console.log( `✅ ${key} subscriptions removed`)
+      await pg.query(`TRUNCATE TABLE ${key}`);
+      console.log(`✅ ${key} subscription removed and table truncated`);
+      return;
     }
+
+    subscription.forEach((sub) => sub.unsubscribe());
+    await pg.query(
+      `TRUNCATE TABLE ${groupsTable},${userGroupsTable}, ${expensesTable}, ${expenseSharesTable}`
+    );
+    console.log(`✅ ${key} subscriptions removed and tables truncated`);
   };
+
   new Shape(
     new ShapeStream({
       url: shapeUrl({
@@ -198,25 +204,23 @@ export async function waterFallingSync(
     ).subscribe(async (data) => {
       // Get members of the grouos current user is member of
       const userIds = [...data.values()]?.map((x) => x.group_id);
-      removeCurrentSubcription(usersTable);
-      currentSubscriptions.set(
-        usersTable,
-        await pg.electric.syncShapeToTable({
-          shape: {
-            url: shapeUrl({
-              electricBaseUrl,
-              table: usersTable,
-              where: groupIds.length ? `id IN (${userIds.join(",")})` : "",
-            }),
-          },
-          table: usersTable,
-          primaryKey: ["id"],
-          shapeKey: usersTable,
-        })
-      );
+      await removeCurrentSubcription(usersTable);
+      const userSync = await pg.electric.syncShapeToTable({
+        shape: {
+          url: shapeUrl({
+            electricBaseUrl,
+            table: usersTable,
+            where: groupIds.length ? `id IN (${userIds.join(",")})` : "",
+          }),
+        },
+        table: usersTable,
+        primaryKey: ["id"],
+        shapeKey: usersTable,
+      });
+      currentSubscriptions.set(usersTable, userSync);
     });
 
-    removeCurrentSubcription(groupsTable);
+    await removeCurrentSubcription(groupsTable);
     const groupSubscriptions = await Promise.all([
       // Sync user_groups to all the groups where the user is member
       pg.electric.syncShapeToTable({
@@ -250,8 +254,9 @@ export async function waterFallingSync(
           url: shapeUrl({
             electricBaseUrl,
             table: expensesTable,
-            where: `payer_id=${userId} ${groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
-              }`,
+            where: `payer_id=${userId} ${
+              groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
+            }`,
           }),
         },
         table: expensesTable,
@@ -264,8 +269,9 @@ export async function waterFallingSync(
           url: shapeUrl({
             electricBaseUrl,
             table: expenseSharesTable,
-            where: `user_id=${userId} ${groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
-              }`,
+            where: `user_id=${userId} ${
+              groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
+            }`,
           }),
         },
         table: expenseSharesTable,
