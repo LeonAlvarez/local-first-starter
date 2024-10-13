@@ -1,5 +1,7 @@
 import { ExtendedPGlite } from "@/components/providers/pglite";
+import { Shape, ShapeStream } from "@electric-sql/client";
 import { PGliteInterface } from "@electric-sql/pglite";
+import { SyncShapeToTableOptions } from "@electric-sql/pglite-sync";
 import { LiveNamespace } from "@electric-sql/pglite/live";
 import {
   schema,
@@ -14,6 +16,18 @@ type TablesToSync = {
   table: string;
   primaryKey?: string[];
 }[];
+
+const shapeUrl = ({
+  shape,
+  table,
+  electricBaseUrl,
+  where = "",
+}: {
+  electricBaseUrl: string;
+  shape?: string;
+  table: string;
+  where?: string;
+}) => `${electricBaseUrl}/${shape || table}?where=${where || ""}`;
 
 export const TablesToSync: TablesToSync = [
   {
@@ -35,7 +49,8 @@ export const TablesToSync: TablesToSync = [
 
 let isLocalDBSchemaSynced = false;
 
-export type MyPGLiteWIthLive = (PGliteInterface | ExtendedPGlite) & LiveNamespace
+export type MyPGLiteWIthLive = (PGliteInterface | ExtendedPGlite) &
+  LiveNamespace;
 
 export async function runMigrations(pg: PGliteInterface, dbName: string) {
   const db = createPgLiteClient(pg);
@@ -66,7 +81,9 @@ export async function dropFks(pg: PGliteInterface) {
     DO $$ 
       DECLARE 
         r RECORD;
-        table_names TEXT[] := ARRAY['${TablesToSync.map(({ table }) => table).join("','")}'];
+        table_names TEXT[] := ARRAY['${TablesToSync.map(
+    ({ table }) => table
+  ).join("','")}'];
       BEGIN 
         RAISE NOTICE 'Table names: %', table_names;
         FOR r IN 
@@ -86,14 +103,11 @@ export async function dropFks(pg: PGliteInterface) {
   `);
 }
 
-export async function syncTables(
-  pg: PGliteInterface,
-  electricBaseUrl: string
-) {
+export async function syncTables(pg: PGliteInterface, electricBaseUrl: string) {
   const syncStart = performance.now();
   await Promise.all(
     TablesToSync.map(({ shape, table, primaryKey }) => {
-      const shapeUrl = `${electricBaseUrl}/${shape || table}`
+      const shapeUrl = `${electricBaseUrl}/${shape || table}`;
       //@ts-expect-error Need to properpy type extension
       pg?.electric?.syncShapeToTable({
         shape: { url: shapeUrl },
@@ -103,6 +117,164 @@ export async function syncTables(
       });
     })
   );
+
+  console.info(
+    `✅ Local database synced in ${performance.now() - syncStart}ms`
+  );
+}
+
+type ShapeSyncResult = {
+  unsubscribe: () => void;
+  readonly isUpToDate: boolean;
+  readonly shapeId: string;
+  subscribeOnceToUpToDate: (
+    cb: () => void,
+    error: (err: Error) => void
+  ) => () => void;
+  unsubscribeAllUpToDateSubscribers: () => void;
+};
+
+type PgLiteWithSync = PGliteInterface & {
+  electric: {
+    syncShapeToTable: (
+      options: SyncShapeToTableOptions
+    ) => Promise<ShapeSyncResult>;
+  };
+};
+
+export async function waterFallingSync(
+  pg: PgLiteWithSync,
+  electricBaseUrl: string,
+  userId: number
+) {
+  if (!userId) return;
+  const syncStart = performance.now();
+  const userGroupsTable = getTableName(schema.userGroups);
+  const groupsTable = getTableName(schema.groups);
+  const usersTable = getTableName(schema.users);
+  const expensesTable = getTableName(schema.expenses);
+  const expenseSharesTable = getTableName(schema.expenseShares);
+
+  let currentSubscriptions = new Map<
+    string,
+    ShapeSyncResult | ShapeSyncResult[]
+  >();
+  const removeCurrentSubcription = (key: string) => {
+    const subscription = currentSubscriptions.get(key);
+
+    if (!subscription) {
+      console.error("Subscription not found");
+      return;
+    }
+
+    if (!Array.isArray(subscription)) {
+      subscription.unsubscribe();
+      console.log( `✅ ${key} subscription removed`)
+    } else if (subscription) {
+      subscription.forEach((sub) => sub.unsubscribe());
+      console.log( `✅ ${key} subscriptions removed`)
+    }
+  };
+  new Shape(
+    new ShapeStream({
+      url: shapeUrl({
+        electricBaseUrl,
+        table: userGroupsTable,
+        where: userId ? `user_id=${userId}` : "",
+      }),
+    })
+  ).subscribe(async (data) => {
+    // Get user related groups from user_groups using `user_id=${userId}`
+    const groupIds = [...data.values()]?.map((x) => x.group_id);
+
+    new Shape(
+      new ShapeStream({
+        url: shapeUrl({
+          electricBaseUrl,
+          table: userGroupsTable,
+          where: groupIds.length ? `group_id IN (${groupIds.join(",")})` : "",
+        }),
+      })
+    ).subscribe(async (data) => {
+      // Get members of the grouos current user is member of
+      const userIds = [...data.values()]?.map((x) => x.group_id);
+      removeCurrentSubcription(usersTable);
+      currentSubscriptions.set(
+        usersTable,
+        await pg.electric.syncShapeToTable({
+          shape: {
+            url: shapeUrl({
+              electricBaseUrl,
+              table: usersTable,
+              where: groupIds.length ? `id IN (${userIds.join(",")})` : "",
+            }),
+          },
+          table: usersTable,
+          primaryKey: ["id"],
+          shapeKey: usersTable,
+        })
+      );
+    });
+
+    removeCurrentSubcription(groupsTable);
+    const groupSubscriptions = await Promise.all([
+      // Sync user_groups to all the groups where the user is member
+      pg.electric.syncShapeToTable({
+        shape: {
+          url: shapeUrl({
+            electricBaseUrl,
+            table: userGroupsTable,
+            where: groupIds.length ? `group_id IN (${groupIds.join(",")})` : "",
+          }),
+        },
+        table: userGroupsTable,
+        primaryKey: ["id"],
+        shapeKey: userGroupsTable,
+      }),
+      // Sync groups to all the groups where the user is member
+      pg.electric.syncShapeToTable({
+        shape: {
+          url: shapeUrl({
+            electricBaseUrl,
+            table: groupsTable,
+            where: groupIds.length ? `id IN (${groupIds.join(",")})` : "",
+          }),
+        },
+        table: groupsTable,
+        primaryKey: ["id"],
+        shapeKey: groupsTable,
+      }),
+      //Sync expenses to all the groups where the user is member, or the user itself
+      pg.electric.syncShapeToTable({
+        shape: {
+          url: shapeUrl({
+            electricBaseUrl,
+            table: expensesTable,
+            where: `payer_id=${userId} ${groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
+              }`,
+          }),
+        },
+        table: expensesTable,
+        primaryKey: ["id"],
+        shapeKey: expensesTable,
+      }),
+      // Sync expense_shares to all the groups where the user is member, or the user itself
+      pg.electric.syncShapeToTable({
+        shape: {
+          url: shapeUrl({
+            electricBaseUrl,
+            table: expenseSharesTable,
+            where: `user_id=${userId} ${groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
+              }`,
+          }),
+        },
+        table: expenseSharesTable,
+        primaryKey: ["id"],
+        shapeKey: expenseSharesTable,
+      }),
+    ]);
+    currentSubscriptions.set(groupsTable, groupSubscriptions);
+  });
 
   console.info(
     `✅ Local database synced in ${performance.now() - syncStart}ms`

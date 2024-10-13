@@ -284,8 +284,8 @@ async function seedGroupExpensesShares() {
 
 async function seedDatabase() {
   console.log("Starting database seeding...");
-  // await seedUsers(30);
-  // await seedGroups(100);
+  await seedUsers(50);
+  await seedGroups(100);
   await seedIndivualExpenses({
     minExpensesPerUser: 20,
     maxExpensesPerUser: 30,

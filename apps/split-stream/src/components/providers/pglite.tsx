@@ -6,6 +6,7 @@ import { PGliteWorker } from "@electric-sql/pglite/worker";
 import { live, PGliteWithLive } from "@electric-sql/pglite/live";
 import createPgLiteClient, { PgDatabase, PgQueryResultHKT, schema } from "db/client";
 import { DebugLevel } from "@electric-sql/pglite";
+import { useUser } from "@/components/providers/user";
 
 const dbName = "test";
 
@@ -21,6 +22,7 @@ export function PgLiteWorkerProvider({
   children: React.ReactNode;
 }): React.ReactNode {
   const [pg, setPg] = useState<ExtendedPGlite>();
+  const { user } = useUser();
 
   const setPglite = React.useCallback(async () => {
     const pglite = (await PGliteWorker.create(
@@ -34,6 +36,7 @@ export function PgLiteWorkerProvider({
         },
         debug,
         meta: {
+          userId: user.id,
           dbName,
           electricBaseUrl:
             process.env.NEXT_PUBLIC_ELECTRIC_SQL_BASE_URL ||

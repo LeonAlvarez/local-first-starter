@@ -10,6 +10,9 @@ importers:
 
   apps/split-stream:
     dependencies:
+      '@electric-sql/client':
+        specifier: ^0.6.2
+        version: 0.6.2
       '@electric-sql/pglite':
         specifier: ^0.2.12
         version: 0.2.12

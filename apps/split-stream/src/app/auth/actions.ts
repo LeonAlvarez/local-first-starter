@@ -52,20 +52,35 @@ export async function login(email: string, password: string) {
 }
 
 export async function getUser() {
-  const sessionCookie = cookies().get('session')?.value;
-  if (!sessionCookie) return null;
+  const userId = await getUserId();
+  if (!userId) {
+    return null;
+  }
 
-  const sessionData = await verifyToken(sessionCookie);
-  if (!sessionData?.user?.id || typeof sessionData.user.id !== 'number') return null;
-
-  if (new Date(sessionData.expiresAt) < new Date()) return null;
-
-  const user = await db
+  const [user] = await db
     .select()
     .from(users)
-    .where(eq(users.id, sessionData.user.id))
+    .where(eq(users.id, userId))
     .limit(1)
-    .then(results => results[0] || null);
 
   return user;
+}
+
+export async function getUserId() {
+  try {
+    const sessionCookie = cookies().get("session")?.value;
+    if (!sessionCookie) {
+      return null;
+    }
+    const parsed = await verifyToken(sessionCookie);
+
+    if (new Date(parsed.expiresAt) < new Date()) {
+      return null;
+    }
+    return parsed.user.id;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }

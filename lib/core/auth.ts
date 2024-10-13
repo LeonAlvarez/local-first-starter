@@ -30,7 +30,7 @@ export async function authenticateUser(
 
   if (!(await verifyPassword(user.password, password))) {
     return null;
-  } 
+  }
 
   return user;
 }

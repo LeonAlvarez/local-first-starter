@@ -1,3 +1,5 @@
+import { getUserId } from "@/app/auth/actions";
+
 export const revalidate = 0;
 export const maxDuration = 60;
 
@@ -6,13 +8,19 @@ export async function GET(
   { params }: { params: { shape: string } }
 ) {
   try {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return new Response("Unauthorized", { status: 403 });
+    }
+
     const url = new URL(request.url);
     const { shape } = params;
 
     const electricUrl = new URL(`${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${shape}`);
 
     url.searchParams.forEach((value, key) => {
-      if ([`shape_id`, `offset`, 'live'].includes(key)) {
+      if ([`shape_id`, `offset`, 'live', 'where'].includes(key)) {
         electricUrl.searchParams.set(key, value)
       }
     });

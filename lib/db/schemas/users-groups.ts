@@ -2,6 +2,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  serial,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -25,6 +26,7 @@ export const groupRoleEnum = pgEnum(
 export const userGroups = pgTable(
   "users_groups",
   {
+    id: serial('id').primaryKey(),
     userId: integer("user_id")
       .references(() => users.id)
       .notNull(),
