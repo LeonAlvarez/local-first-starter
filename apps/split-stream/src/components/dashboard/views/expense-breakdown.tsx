@@ -46,9 +46,11 @@ export default function ExpenseBreakdown() {
     debug: true,
   });
 
+  console.log(expenses)
+
   const groupedExpenses = useMemo(() => {
     const grouped = (expenses || []).reduce((acc, { type, share }) => {
-      const { name, label, color } = categoriesMap[type!] || categoriesMap.misc;
+      const { name, label, color } = categoriesMap[type!] || categoriesMap.miscellaneous;
       if (!acc[name]) {
         acc[name] = {
           label,

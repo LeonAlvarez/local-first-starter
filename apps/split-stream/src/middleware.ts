@@ -1,4 +1,4 @@
-import { getExpireAt, getSignedSessionToken, verifyToken } from "core/auth";
+import { getExpireAt, getSignedSessionToken, verifyToken } from "utils/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

@@ -7,7 +7,7 @@ import usersGroups, {
 } from "./schemas/users-groups";
 import type { InsertUser, User } from "./schemas/users";
 import type { InsertGroup } from "./schemas/groups";
-import { hashPassword } from "core/auth";
+import { hashPassword } from "utils/auth";
 import expenses from "./schemas/expenses";
 import expenseShares from "./schemas/expense-shares";
 import type { InsertExpense } from "./schemas/expenses";

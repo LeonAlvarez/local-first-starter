@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@neondatabase/serverless": "^0.10.1",
-    "core": "workspace:*",
+    "utils": "workspace:*",
     "drizzle-orm": "^0.34.1",
     "drizzle-zod": "^0.5.1",
     "pg": "^8.13.0",

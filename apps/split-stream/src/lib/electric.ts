@@ -176,7 +176,7 @@ export async function waterFallingSync(
 
     subscription.forEach((sub) => sub.unsubscribe());
     await pg.query(
-      `TRUNCATE TABLE ${groupsTable},${userGroupsTable}, ${expensesTable}, ${expenseSharesTable}`
+      `TRUNCATE TABLE ${groupsTable}, ${userGroupsTable}, ${expensesTable}, ${expenseSharesTable}`
     );
     console.log(`✅ ${key} subscriptions removed and tables truncated`);
   };
@@ -254,9 +254,7 @@ export async function waterFallingSync(
           url: shapeUrl({
             electricBaseUrl,
             table: expensesTable,
-            where: `payer_id=${userId} ${
-              groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
-            }`,
+            where: `payer_id=${userId} ${groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""}`,
           }),
         },
         table: expensesTable,
@@ -269,9 +267,7 @@ export async function waterFallingSync(
           url: shapeUrl({
             electricBaseUrl,
             table: expenseSharesTable,
-            where: `user_id=${userId} ${
-              groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""
-            }`,
+            where: `user_id=${userId} ${ groupIds.length ? `OR group_id IN (${groupIds.join(",")})` : ""}`,
           }),
         },
         table: expenseSharesTable,
