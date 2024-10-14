@@ -2,7 +2,6 @@
 
 import { useUser } from "@/components/providers/user";
 import { groupsQuery } from "db/query/groups";
-import { Group, User, UserGroup } from "db/schema";
 import { useMemo, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,17 +18,6 @@ import { TeamRole } from "db/schemas/users-groups";
 import { DbType as GroupsDbType } from "db/query/groups";
 import { useNewDrizzleLiveQuery } from "@/hooks/useDrizzleLiveQuery";
 import { DbType } from "db/client";
-
-type GroupWithMembers = Group & {
-  members: {
-    id: User["id"];
-    userName: User["userName"];
-    firstName: User["firstName"];
-    lastName: User["lastName"];
-    email: User["email"];
-    role: UserGroup["role"];
-  }[];
-};
 
 export default function ManageGroup({ id }: { id: string }) {
   const [newMemberEmail, setNewMemberEmail] = useState("");

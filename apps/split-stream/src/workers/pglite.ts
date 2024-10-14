@@ -1,7 +1,7 @@
 import { PGliteWorkerOptions, worker } from '@electric-sql/pglite/worker'
 import { PGlite } from '@electric-sql/pglite'
 import { electricSync } from '@electric-sql/pglite-sync'
-import { dropFks, runMigrations, syncTables, waterFallingSync } from '@/lib/electric'
+import { dropFks, runMigrations, syncTables } from '@/lib/electric'
 
 worker({
   async init(options: PGliteWorkerOptions) {

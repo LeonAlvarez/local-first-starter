@@ -7,6 +7,7 @@ export * from "drizzle-orm";
 
 const queryClient = neon(process.env.DATABASE_URL!);
 const poolQueryClient = neon(process.env.DATABASE_POOL_URL!);
+
 export const db = drizzle(poolQueryClient, { schema } as DrizzleConfig<typeof schema>);
 export const nonPoolDb = drizzle(queryClient, { schema } as DrizzleConfig<typeof schema>);
 
