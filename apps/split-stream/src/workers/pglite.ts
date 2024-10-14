@@ -1,7 +1,7 @@
 import { PGliteWorkerOptions, worker } from '@electric-sql/pglite/worker'
 import { PGlite } from '@electric-sql/pglite'
 import { electricSync } from '@electric-sql/pglite-sync'
-import { dropFks, runMigrations, waterFallingSync } from '@/lib/electric'
+import { dropFks, runMigrations, syncTables, waterFallingSync } from '@/lib/electric'
 
 worker({
   async init(options: PGliteWorkerOptions) {
@@ -15,8 +15,8 @@ worker({
     })
     await runMigrations(pg, options.meta.dbName);
     await dropFks(pg)
-    //await syncTables(pg, options.meta.electricBaseUrl);
-    await waterFallingSync(pg, options.meta.electricBaseUrl, options.meta.userId);
+    await syncTables(pg, options.meta.electricBaseUrl);
+    //await waterFallingSync(pg, options.meta.electricBaseUrl, options.meta.userId);
 
     return pg
   },

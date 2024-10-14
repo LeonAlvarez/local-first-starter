@@ -13,7 +13,7 @@ export const useNewDrizzleLiveQuery = <
   queryFn,
   key,
   data,
-  defaultValue,
+  defaultValue = [],
   debug = false,
 }: {
   queryFn: (db: DbType, data?: E) => T,

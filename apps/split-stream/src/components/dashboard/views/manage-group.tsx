@@ -1,8 +1,6 @@
 "use client";
 
-import { ExtendedPGlite } from "@/components/providers/pglite";
 import { useUser } from "@/components/providers/user";
-import { useLiveQuery, usePGlite } from "@electric-sql/pglite-react";
 import { groupsQuery } from "db/query/groups";
 import { Group, User, UserGroup } from "db/schema";
 import { useMemo, useState } from "react";
@@ -18,7 +16,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TeamRole } from "db/schemas/users-groups";
-import { DbType as GroupsDbType } from 'db/query/groups';
+import { DbType as GroupsDbType } from "db/query/groups";
+import { useNewDrizzleLiveQuery } from "@/hooks/useDrizzleLiveQuery";
+import { DbType } from "db/client";
 
 type GroupWithMembers = Group & {
   members: {
@@ -32,21 +32,35 @@ type GroupWithMembers = Group & {
 };
 
 export default function ManageGroup({ id }: { id: string }) {
-  const pg = usePGlite() as ExtendedPGlite;
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const { user } = useUser();
+  const groupId = parseInt(id);
 
-  const { getGroupWithMembers } = useMemo(
-    () => groupsQuery(pg._db as unknown as GroupsDbType),
-    [pg]
-  );
+  const [group] = useNewDrizzleLiveQuery({
+    queryFn: (db: DbType) =>
+      groupsQuery(db as unknown as GroupsDbType).getGroupWithMembers(groupId),
+    key: "group-detail",
+    debug: true,
+  });
 
-  const { sql, params } = useMemo(
-    () => getGroupWithMembers(parseInt(id)).toSQL(),
-    [id, getGroupWithMembers]
-  );
+  const isAdminOrOwner = useMemo(() => {
+    const currentUserInGroup = group?.members?.find(
+      (member) => member.id === user?.id
+    );
+    return (
+      currentUserInGroup?.role === TeamRole.ADMIN ||
+      currentUserInGroup?.role === TeamRole.OWNER
+    );
+  }, [group, user]);
 
-  const [group] = useLiveQuery<GroupWithMembers>(sql, params)?.rows || [];
+  if (!group) {
+    return (
+      <div>
+        404
+      </div>
+    );
+  }
+
   console.log(group);
 
   const handleInviteMember = () => {
@@ -59,16 +73,6 @@ export default function ManageGroup({ id }: { id: string }) {
     // TODO: Implement role change logic
     console.log(`Changing role for member ${memberId} to ${newRole}`);
   };
-
-  const isAdminOrOwner = useMemo(() => {
-    const currentUserInGroup = group?.members.find(
-      (member) => member.id === user?.id
-    );
-    return (
-      currentUserInGroup?.role === TeamRole.ADMIN ||
-      currentUserInGroup?.role === TeamRole.OWNER
-    );
-  }, [group, user]);
 
   return (
     <div className="grid gap-4 grid-cols-1">

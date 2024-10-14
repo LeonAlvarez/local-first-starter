@@ -1,7 +1,7 @@
 import { type SQL, and, eq, getTableColumns, sql } from "drizzle-orm";
 import { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import groups, { Group } from "../schemas/groups";
-import userGroups from "../schemas/users-groups";
+import userGroups, { UserGroup } from "../schemas/users-groups";
 import { type User } from "../schemas/users";
 import usersGroups from "../schemas/users-groups";
 import users from "../schemas/users";
@@ -13,6 +13,15 @@ type groupsSchema = {
 };
 
 export type DbType = PgDatabase<PgQueryResultHKT, groupsSchema>;
+
+type UserWithRole = {
+  id: User["id"];
+  userName: User["userName"];
+  firstName: User["firstName"];
+  lastName: User["lastName"];
+  role: UserGroup["role"];
+  email: User["email"];
+};
 
 export function groupsQuery(db: DbType) {
   const getGroups = (where?: SQL) => {
@@ -55,7 +64,7 @@ export function groupsQuery(db: DbType) {
     return db
       .select({
         ...getTableColumns(groups),
-        members: sql<User[]>`json_agg(json_build_object(
+        members: sql<UserWithRole[]>`json_agg(json_build_object(
           'id', ${users.id},
           'userName', ${users.userName},
           'firstName', ${users.firstName},
