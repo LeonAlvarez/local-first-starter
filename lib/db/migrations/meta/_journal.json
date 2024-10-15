@@ -15,6 +15,13 @@
       "when": 1728946804391,
       "tag": "0001_loud_black_tom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729034172235,
+      "tag": "0002_steady_thena",
+      "breakpoints": true
     }
   ]
 }
