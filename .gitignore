@@ -28,6 +28,7 @@ yarn-error.log*
 
 # local env files
 .env
+**/.dev.vars
 
 # vercel
 .vercel
@@ -43,6 +44,10 @@ postgres_data/
 #turbo
 **/.turbo/**
 
+# Local only docs
 references.md
 features.md
 stuff.md
+
+#workers_api WIP
+apps/api_workers/**

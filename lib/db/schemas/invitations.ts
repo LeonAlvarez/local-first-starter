@@ -28,9 +28,15 @@ export const invitations = pgTable(
   "invitations",
   {
     id: serial("id").primaryKey(),
-    userId: integer("user_id").references(() => users.id),
-    invitedBy: integer("invited_by").references(() => users.id),
-    groupId: integer("group_id").references(() => groups.id),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    invitedBy: integer("invited_by")
+      .notNull()
+      .references(() => users.id),
+    groupId: integer("group_id")
+      .notNull()
+      .references(() => groups.id),
     role: groupRoleEnum().notNull().default(TeamRole.USER),
     status: invitationStatusEnum().notNull().default(InvitationStatus.PENDING),
     createdAt: timestamp("created_at").defaultNow(),
@@ -57,4 +63,4 @@ export const selectInviteSchema = createSelectSchema(invitations);
 export type InsertInvite = z.infer<typeof insertInviteSchema>;
 export type UserInvite = z.infer<typeof selectInviteSchema>;
 
-export default users;
+export default invitations;

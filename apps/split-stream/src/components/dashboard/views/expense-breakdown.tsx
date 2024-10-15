@@ -41,16 +41,19 @@ export default function ExpenseBreakdown() {
 
   const expenses = useNewDrizzleLiveQuery({
     queryFn: (db: DbType) =>
-      expensesQuery(db).getUserExpenses(user.id).orderBy(schema.expenses.id),
+      expensesQuery(db)
+        .getUserExpenses(user.id)
+        .orderBy(schema.expenses.id),
     key: "expenses",
     debug: true,
   });
 
-  console.log(expenses)
+  console.log(expenses);
 
   const groupedExpenses = useMemo(() => {
     const grouped = (expenses || []).reduce((acc, { type, share }) => {
-      const { name, label, color } = categoriesMap[type!] || categoriesMap.miscellaneous;
+      const { name, label, color } =
+        categoriesMap[type!] || categoriesMap.miscellaneous;
       if (!acc[name]) {
         acc[name] = {
           label,

@@ -4,22 +4,13 @@ import { randomBytes } from "@noble/hashes/utils";
 
 const key = new TextEncoder().encode(process.env.AUTH_KEY_SECRET);
 
-type User = {
-  id: number;
-  email: string;
-  phone: string;
-  userName: string;
-  firstName: string;
-  lastName: string;
-  bio: string | null;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 const SESION_DURATION = process.env.SESION_DURATION
   ? parseInt(process.env.SESION_DURATION)
   : 24 * 60 * 60 * 1000;
+
+interface User {
+  id: number | string;
+}
 
 export const getExpireAt = (start = Date.now()) =>
   new Date(start + SESION_DURATION);

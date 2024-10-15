@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import groups from "../schemas/groups";
 import users, { type User } from "../schemas/users";
+import publicUsers from "../client/schemas/users";
 import { expenses, ExpenseShare, expenseShares } from "../schema";
 
 export const categories = [
@@ -36,7 +37,7 @@ export const categoriesMap: Record<string, (typeof categories)[number]> =
 
 type expensesSchema = {
   groups: typeof groups;
-  users: typeof users;
+  users: typeof users | typeof publicUsers;
   expenses: typeof expenses;
   expenseShares: typeof expenseShares;
 };

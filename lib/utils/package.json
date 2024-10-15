@@ -12,7 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hono/zod-openapi": "^0.16.4",
+    "@noble/hashes": "^1.5.0",
+    "@scalar/hono-api-reference": "^0.5.153",
+    "hono": "^4.6.4",
+    "hono-pino": "^0.3.0",
     "jose": "^5.9.4",
-    "@noble/hashes": "^1.5.0"
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2"
   }
 }

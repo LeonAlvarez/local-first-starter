@@ -1,0 +1,1 @@
+export { userGroups } from "../../schemas/users-groups";

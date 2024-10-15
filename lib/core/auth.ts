@@ -1,7 +1,7 @@
 import db from "db";
 import { User, users } from "db/schema";
 import { eq } from "db/client";
-import {verifyPassword} from "utils/auth";
+import { verifyPassword } from "utils/auth";
 export * from "utils/auth";
 
 export async function authenticateUser(

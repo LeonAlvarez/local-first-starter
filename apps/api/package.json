@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "dotenv -e .env -- tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.2",
+    "@hono/zod-openapi": "^0.16.4",
+    "core": "workspace:*",
+    "db": "workspace:*",
+    "hono": "^4.6.4",
+    "utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
+}
