@@ -10,7 +10,9 @@ const ALLOWED_SHAPES: Set<string> = new Set(
 );
 
 const getTableColumnsNames = (table: PgTableWithColumns<any>) =>
-  (Object.values(getTableColumns(table)) as PgColumn[]).map((x: PgColumn) => x.name);
+  (Object.values(getTableColumns(table)) as PgColumn[]).map(
+    (x: PgColumn) => x.name
+  );
 
 const getShapeUrl = (request: Request, shape: string) => {
   if (!ALLOWED_SHAPES.has(shape)) {
@@ -65,13 +67,6 @@ export async function GET(
         "Accept-Encoding": "gzip, deflate, br",
       },
     });
-
-    if (!resp.ok) {
-      console.error("Error response:", resp.status, resp.statusText);
-      return new Response(`Error: ${resp.status} ${resp.statusText}`, {
-        status: resp.status,
-      });
-    }
 
     // Check if the response is 204 No Content
     if (resp.status === 204) {
