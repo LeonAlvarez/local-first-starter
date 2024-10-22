@@ -1,7 +1,6 @@
 import { getUserId } from "@/app/auth/actions";
 import { getTableColumns, getTableName } from "db";
-import { schema, PgColumn } from "db/client";
-import { PgTableWithColumns } from "drizzle-orm/pg-core";
+import { schema, PgColumn, PgTableWithColumns } from "db/client";
 
 export const revalidate = 0;
 export const maxDuration = 60;
@@ -10,7 +9,7 @@ const ALLOWED_SHAPES: Set<string> = new Set(
   Object.values(schema).map((table) => getTableName(table))
 );
 
-const getTableColumsnNames = (table: PgTableWithColumns<any>) =>
+const getTableColumnsNames = (table: PgTableWithColumns<any>) =>
   (Object.values(getTableColumns(table)) as PgColumn[]).map((x: PgColumn) => x.name);
 
 const getShapeUrl = (request: Request, shape: string) => {
@@ -33,7 +32,7 @@ const getShapeUrl = (request: Request, shape: string) => {
   if (shape == getTableName(schema.users)) {
     shapeUrl.searchParams.set(
       "columns",
-      `${getTableColumsnNames(schema.users).join(",")}`
+      `${getTableColumnsNames(schema.users).join(",")}`
     );
   }
 
