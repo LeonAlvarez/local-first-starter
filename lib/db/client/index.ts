@@ -4,7 +4,7 @@ import { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import { drizzle as PgLiteDrizzle } from "drizzle-orm/pglite";
 export * from "drizzle-orm";
 export {
-  type PgSelectHKTBase, type PgSelectBase, PgDialect
+  type PgSelectHKTBase, type PgSelectBase, PgDialect, PgColumn
 } from 'drizzle-orm/pg-core';
 import migrations from "./migrations/export.json";
 

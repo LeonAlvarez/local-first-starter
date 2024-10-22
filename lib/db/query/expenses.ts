@@ -8,7 +8,7 @@ import {
 import groups from "../schemas/groups";
 import users, { type User } from "../schemas/users";
 import publicUsers from "../client/schemas/users";
-import { expenses, ExpenseShare, expenseShares } from "../schema";
+import { expenses, expenseShares } from "../schema";
 
 export const categories = [
   { label: "Miscellaneous", color: "#6B7280", name: "miscellaneous" },

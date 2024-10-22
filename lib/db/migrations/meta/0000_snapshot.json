@@ -1,5 +1,5 @@
 {
-  "id": "0b9e4169-f9a6-4455-9a0b-5b0e769deb90",
+  "id": "b5a45739-3413-4149-a6e6-3e3317cbdde2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -242,31 +242,32 @@
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "invited_by": {
           "name": "invited_by",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "group_id": {
           "name": "group_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "role": {
           "name": "role",
-          "type": "invitationStatus",
+          "type": "role",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'pending'"
+          "default": "'USER'"
         },
         "status": {
           "name": "status",
-          "type": "varchar(255)",
+          "type": "invitationStatus",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"

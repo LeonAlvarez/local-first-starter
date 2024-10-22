@@ -1,7 +1,44 @@
 import { getUserId } from "@/app/auth/actions";
+import { getTableColumns, getTableName } from "db";
+import { schema, PgColumn } from "db/client";
+import { PgTableWithColumns } from "drizzle-orm/pg-core";
 
 export const revalidate = 0;
 export const maxDuration = 60;
+
+const ALLOWED_SHAPES: Set<string> = new Set(
+  Object.values(schema).map((table) => getTableName(table))
+);
+
+const getTableColumsnNames = (table: PgTableWithColumns<any>) =>
+  (Object.values(getTableColumns(table)) as PgColumn[]).map((x: PgColumn) => x.name);
+
+const getShapeUrl = (request: Request, shape: string) => {
+  if (!ALLOWED_SHAPES.has(shape)) {
+    return;
+  }
+
+  const url = new URL(request.url);
+
+  const shapeUrl = new URL(
+    `${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${shape}`
+  );
+
+  url.searchParams.forEach((value, key) => {
+    if ([`shape_id`, `offset`, "live", "where"].includes(key)) {
+      shapeUrl.searchParams.set(key, value);
+    }
+  });
+
+  if (shape == getTableName(schema.users)) {
+    shapeUrl.searchParams.set(
+      "columns",
+      `${getTableColumsnNames(schema.users).join(",")}`
+    );
+  }
+
+  return shapeUrl;
+};
 
 export async function GET(
   request: Request,
@@ -14,27 +51,27 @@ export async function GET(
       return new Response("Unauthorized", { status: 403 });
     }
 
-    const url = new URL(request.url);
     const { shape } = params;
+    const shapeUrl = getShapeUrl(request, shape);
 
-    const electricUrl = new URL(`${process.env.ELECTRIC_SQL_BASE_URL}/v1/shape/${shape}`);
+    if (!shapeUrl) {
+      return new Response(null, { status: 403 });
+    }
 
-    url.searchParams.forEach((value, key) => {
-      if ([`shape_id`, `offset`, 'live', 'where'].includes(key)) {
-        electricUrl.searchParams.set(key, value)
-      }
-    });
+    console.log(shapeUrl.toString());
 
-    let resp = await fetch(electricUrl.toString(), {
-      cache: 'no-store',
+    let resp = await fetch(shapeUrl.toString(), {
+      cache: "no-store",
       headers: {
-        'Accept-Encoding': 'gzip, deflate, br',
+        "Accept-Encoding": "gzip, deflate, br",
       },
     });
 
     if (!resp.ok) {
-      console.error('Error response:', resp.status, resp.statusText);
-      return new Response(`Error: ${resp.status} ${resp.statusText}`, { status: resp.status });
+      console.error("Error response:", resp.status, resp.statusText);
+      return new Response(`Error: ${resp.status} ${resp.statusText}`, {
+        status: resp.status,
+      });
     }
 
     // Check if the response is 204 No Content
@@ -43,24 +80,29 @@ export async function GET(
     }
 
     if (resp.headers.get(`content-encoding`)) {
-      const headers = new Headers(resp.headers)
-      headers.delete(`content-encoding`)
+      const headers = new Headers(resp.headers);
+      headers.delete(`content-encoding`);
       headers.delete(`content-length`);
-      headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
-      headers.set('Pragma', 'no-cache');
-      headers.set('Expires', '0');
+      headers.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      );
+      headers.set("Pragma", "no-cache");
+      headers.set("Expires", "0");
       resp = new Response(resp.body, {
         status: resp.status,
         statusText: resp.statusText,
         headers,
-      })
+      });
     }
 
-    return resp
-
+    return resp;
   } catch (error) {
-    const errorMessage = error instanceof Error ? `${error.name} : ${error.message}` : error
-    console.error('Unexpected error:', errorMessage);
-    return new Response(`Internal Server Error: ${errorMessage}`, { status: 500 });
+    const errorMessage =
+      error instanceof Error ? `${error.name} : ${error.message}` : error;
+    console.error("Unexpected error:", errorMessage);
+    return new Response(`Internal Server Error: ${errorMessage}`, {
+      status: 500,
+    });
   }
 }

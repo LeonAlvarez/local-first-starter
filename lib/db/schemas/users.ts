@@ -1,11 +1,9 @@
-import { getTableColumns } from "drizzle-orm";
 import {
   pgTable,
   serial,
   text,
   varchar,
   timestamp,
-  PgColumnBuilderBase,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";

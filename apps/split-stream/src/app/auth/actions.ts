@@ -22,7 +22,7 @@ export async function login(email: string, password: string) {
   const user = await authenticateUser(email, password);
 
   if (user) {
-    const expiresAt = getExpireAt()
+    const expiresAt = getExpireAt();
 
     const sessionData = {
       user: {
@@ -60,8 +60,8 @@ export async function getUser() {
   const [user] = await db
     .select()
     .from(users)
-    .where(eq(users.id, userId))
-    .limit(1)
+    .where(eq(users.id, parseInt(userId.toString())))
+    .limit(1);
 
   return user;
 }
@@ -78,7 +78,6 @@ export async function getUserId() {
       return null;
     }
     return parsed.user.id;
-
   } catch (e) {
     console.log(e);
     return null;

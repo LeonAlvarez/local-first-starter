@@ -1,1 +1,1 @@
-export { userGroups } from "../../schemas/users-groups";
+export { userGroups, groupRoleEnum } from "../../schemas/users-groups";

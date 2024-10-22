@@ -5,10 +5,11 @@ import userGroups, { UserGroup } from "../schemas/users-groups";
 import { type PublicUser as User } from "../schemas/users";
 import usersGroups from "../schemas/users-groups";
 import users from "../client/schemas/users";
+import publicUsers from "../client/schemas/users";
 
 type groupsSchema = {
   groups: typeof groups;
-  users: typeof users;
+  users: typeof users | typeof publicUsers;
   usersGroups: typeof usersGroups;
 };
 
@@ -52,7 +53,7 @@ export function groupsQuery(db: DbType) {
     return db
       .select({
         ...getTableColumns(groups),
-        usersCount: sql`group_count.user_count`.as("usersCount"),
+        usersCount: sql<number>`group_count.user_count`.as("usersCount"),
       })
       .from(usersGroups)
       .leftJoin(groups, eq(usersGroups.groupId, groups.id))

@@ -16,7 +16,7 @@ worker({
     await runMigrations(pg, options.meta.dbName);
     await dropFks(pg)
     await syncTables(pg, options.meta.electricBaseUrl);
-    //await waterFallingSync(pg, options.meta.electricBaseUrl, options.meta.userId);
+    // await waterFallingSync(pg, options.meta.electricBaseUrl, options.meta.userId);
 
     return pg
   },

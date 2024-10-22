@@ -1,46 +1,33 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLiveQuery, usePGlite } from "@electric-sql/pglite-react";
 import { Group } from "db/schema";
-import { groupsQuery, DbType as GroupsDbType } from "db/query/groups";
-import { ExtendedPGlite } from "@/components/providers/pglite";
+import { groupsQuery, DbType } from "db/query/groups";
 import { useUser } from "@/components/providers/user";
 import { schema, ilike } from "db/client";
 import Link from "next/link";
-
-type GroupWithCount = Group & { usersCount: number };
+import { useNewDrizzleLiveQuery } from "@/hooks/useDrizzleLiveQuery";
 
 const MyGroups: React.FC = () => {
   const [newGroupName, setNewGroupName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useUser();
-  const pg = usePGlite() as ExtendedPGlite;
 
-  const { getUserGroupsWithMemberCount } = useMemo(
-    () => groupsQuery(pg._db as unknown as GroupsDbType),
-    [pg]
-  );
-
-  const { sql, params } = useMemo(
-    () =>
-      getUserGroupsWithMemberCount(
-        user.id,
-        ilike(schema.groups.name, `%${searchTerm}%`)
-      )
-        .orderBy(schema.groups.id)
-        .toSQL(),
-    [searchTerm, user, getUserGroupsWithMemberCount]
-  );
-
-  console.log(sql)
-  console.log(params)
-
-  const groups = useLiveQuery<GroupWithCount>(sql, params)?.rows || [];
+  const groups = useNewDrizzleLiveQuery({
+    queryFn: (db) =>
+      groupsQuery(db as unknown as DbType)
+        .getUserGroupsWithMemberCount(
+          user.id,
+          ilike(schema.groups.name, `%${searchTerm}%`)
+        )
+        .orderBy(schema.groups.id),
+    key: "groups",
+    debug: true,
+  });
 
   const handleCreateGroup = () => {
     if (newGroupName.trim()) {
@@ -97,9 +84,7 @@ const MyGroups: React.FC = () => {
                     </p>
                   </div>
                   <Button variant="outline" size="sm">
-                    <Link href={`/dashboard/groups/${group.id}`}>
-                      Manage
-                    </Link>
+                    <Link href={`/dashboard/groups/${group.id}`}>Manage</Link>
                   </Button>
                 </div>
               ))}

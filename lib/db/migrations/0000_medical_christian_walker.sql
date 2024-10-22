@@ -41,11 +41,11 @@ CREATE TABLE IF NOT EXISTS "groups" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "invitations" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"user_id" integer,
-	"invited_by" integer,
-	"group_id" integer,
-	"role" "invitationStatus" DEFAULT 'pending' NOT NULL,
-	"status" varchar(255) DEFAULT 'pending' NOT NULL,
+	"user_id" integer NOT NULL,
+	"invited_by" integer NOT NULL,
+	"group_id" integer NOT NULL,
+	"role" "role" DEFAULT 'USER' NOT NULL,
+	"status" "invitationStatus" DEFAULT 'pending' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
