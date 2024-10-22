@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Group } from "db/schema";
 import { groupsQuery, DbType } from "db/query/groups";
 import { useUser } from "@/components/providers/user";
 import { schema, ilike } from "db/client";

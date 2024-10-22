@@ -8,7 +8,7 @@ import {
   useEffect,
 } from 'react';
 import { use } from 'react';
-import { type User } from 'db/schemas/users';
+import { type User } from 'db/client';
 import { redirect } from 'next/navigation';
 
 type UserContextType = {

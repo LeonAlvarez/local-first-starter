@@ -10,9 +10,9 @@ export * from "drizzle-orm";
 export {
   type PgSelectHKTBase,
   type PgSelectBase,
-  type PgDialect,
   type PgColumn,
   type PgTableWithColumns,
+  PgDialect,
 } from "drizzle-orm/pg-core";
 import migrations from "./migrations/export.json";
 
@@ -22,12 +22,14 @@ export {
   insertUserSchema,
   selectUserSchema,
 } from "../schemas/users";
+
 export {
   type Group,
   type InsertGroup,
   insertGroupSchema,
   selectGroupSchema,
 } from "../schemas/groups";
+
 export {
   type UserGroup,
   type InsertUserGroup,

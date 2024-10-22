@@ -2,18 +2,20 @@ import Link from "next/link";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { LogOutButton } from "@/components/logout-button";
 import { UserProvider } from "@/components/providers/user";
-import { getUser } from "@/app/auth/actions";
 import { PgLiteWorkerProvider } from "@/components/providers/pglite";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DashboardTabs } from "@/components/dashboard/navigation";
+import { getUser } from "@/lib/auth";
 
 export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userPromise = getUser();
+
   return (
-    <UserProvider userPromise={getUser()}>
+    <UserProvider userPromise={userPromise}>
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <header className="border-b">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">

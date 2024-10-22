@@ -1,4 +1,4 @@
-import { getUserId } from "@/app/auth/actions";
+import { getUserId } from "@/lib/auth";
 import { getTableColumns, getTableName } from "db";
 import { schema, PgColumn, PgTableWithColumns } from "db/client";
 
@@ -9,6 +9,7 @@ const ALLOWED_SHAPES: Set<string> = new Set(
   Object.values(schema).map((table) => getTableName(table))
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getTableColumnsNames = (table: PgTableWithColumns<any>) =>
   (Object.values(getTableColumns(table)) as PgColumn[]).map(
     (x: PgColumn) => x.name
