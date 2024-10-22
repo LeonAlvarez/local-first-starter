@@ -5,7 +5,7 @@ import { UserProvider } from "@/components/providers/user";
 import { PgLiteWorkerProvider } from "@/components/providers/pglite";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DashboardTabs } from "@/components/dashboard/navigation";
-import { getUser } from "@/lib/auth";
+import { getUser } from "@/app/auth/actions";
 
 export default function AppLayout({
   children,

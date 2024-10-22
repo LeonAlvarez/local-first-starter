@@ -1,4 +1,4 @@
-import { getUserId } from "@/lib/auth";
+import { getUserId } from "@/app/auth/actions";
 import { getTableColumns, getTableName } from "db";
 import { schema, PgColumn, PgTableWithColumns } from "db/client";
 
