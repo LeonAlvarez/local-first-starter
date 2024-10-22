@@ -3,7 +3,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "DATABASE_POOL_URL",
+        "DATABASE_URL",
+        "AUTH_KEY_SECRET",
+        "ELECTRIC_SQL_BASE_URL"
+      ],
       "outputs": [
         "dist/**",
         ".next/**",
