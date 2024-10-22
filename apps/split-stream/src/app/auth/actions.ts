@@ -68,8 +68,9 @@ export async function getUser() {
 }
 
 export async function getUserId() {
+  const sessionCookie = cookies().get("session")?.value;
+  
   try {
-    const sessionCookie = cookies().get("session")?.value;
     if (!sessionCookie) {
       return null;
     }
